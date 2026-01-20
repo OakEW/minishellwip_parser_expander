@@ -30,78 +30,6 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-int	is_special(char *c)
-{
-	if (*c == '|' || *c == '\'' || *c == '\"' || *c == '<' || *c == '>' || *c == '(' || *c == ')')
-		return (1);
-	else if (*c == '&' && *(c + 1) == '&')
-		return (1);
-	return (0);
-
-}
-
-void	free_tokens(t_token *head)
-{
-	t_token *tmp;
-
-	while (head)
-	{
-		tmp = head;
-		head = head->next;
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
-}
-
-int	ft_strlen(char *str, int type)
-{
-	int		x;
-	char	q;
-
-	x = 0;
-	q = *str;
-	if (!str)
-		return (0);
-	if (type == SINGLE_Q || type == DOUBLE_Q)
-	{
-		x++;
-		while (str[x] && str[x] != q)
-			x++;
-		if (str[x] == q)
-            x++;
-		return (x);
-	}
-	while (str[x] > 32 && !is_special(&str[x]))
-		x++;
-	return (x);
-}
-
-char	*ft_strndup(const char *s, int n, int type)
-{
-	char	*dup;
-	int		i;
-
-	if (n <= 0)
-		return (NULL);
-	i = 0;
-	if (type == SINGLE_Q || type == DOUBLE_Q)
-	{
-		s++;
-		n -= 2;
-	}
-	dup = (char *) malloc(sizeof(char) * (n + 1));
-	if (dup == 0)
-		return (0);
-	while (i < n)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
-
 int	is_operator(char *str)
 {
 	if (*str == '|' && *(str + 1) != '|')
@@ -129,6 +57,68 @@ int	is_operator(char *str)
 	return(0);
 }
 
+void	free_tokens(t_token *head)
+{
+	t_token *tmp;
+
+	while (head)
+	{
+		tmp = head;
+		head = head->next;
+		if (tmp->value)
+			free(tmp->value);
+		free(tmp);
+	}
+}
+
+int	token_len(char *str, int type)
+{
+	int		x;
+	char	q;
+
+	x = 0;
+	q = *str;
+	if (!str)
+		return (0);
+	if (type == SINGLE_Q || type == DOUBLE_Q)
+	{
+		x++;
+		while (str[x] && str[x] != q)
+			x++;
+		if (str[x] == q)
+            x++;
+		return (x);
+	}
+	while (str[x] > 32 && !is_operator(&str[x]))
+		x++;
+	return (x);
+}
+
+char	*token_strndup(const char *s, int n, int type)
+{
+	char	*dup;
+	int		i;
+
+	if (n <= 0)
+		return (NULL);
+	i = 0;
+	if (type == SINGLE_Q || type == DOUBLE_Q)
+	{
+		s++;
+		n -= 2;
+	}
+	dup = (char *) malloc(sizeof(char) * (n + 1));
+	if (dup == 0)
+		return (0);
+	while (i < n)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+
 t_token *new_token(t_token_type type, char *str)
 {
 	t_token	*token;
@@ -138,14 +128,14 @@ t_token *new_token(t_token_type type, char *str)
 	if (type > 7)
 		len = 2;
 	else if (type <= 2)
-		len = ft_strlen(str, type);
+		len = token_len(str, type);
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->type = type;
 	if (str)
 	{
-		token->value = ft_strndup(str, len, type);
+		token->value = token_strndup(str, len, type);
 		if (!token->value)
 			return (free(token), NULL);
 	}
@@ -153,7 +143,7 @@ t_token *new_token(t_token_type type, char *str)
 	return (token);
 }
 
-int	add_token(t_token **head, t_token **current, t_token_type type, char *str)
+int	make_token(t_token **head, t_token **current, t_token_type type, char *str)
 {
 	t_token *token;
 	
@@ -169,11 +159,18 @@ int	add_token(t_token **head, t_token **current, t_token_type type, char *str)
 		return (1);
 	else if (type > 7)
 		return (2);
-	return (ft_strlen(str, type));
+	return (token_len(str, type));
 }
+
+// int	precheck_line(char *line)
+// {
+
+// }
 
 t_token	*lexer(char	*line)
 {
+	// if (precheck_line(line) < 0)
+	// 	return (NULL);
 	int		i;
 	int		n;
 	t_token	*current;
@@ -190,7 +187,7 @@ t_token	*lexer(char	*line)
 		if (line[i] == 0)
 			break ;
 		type = is_operator(&line[i]);
-		n = add_token(&head, &current, type, &line[i]);
+		n = make_token(&head, &current, type, &line[i]);
 		if (n < 0)
 			return (free_tokens(head), NULL);
 		i += n;
