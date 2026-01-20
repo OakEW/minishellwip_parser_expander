@@ -65,30 +65,16 @@ int	ft_strlen(char *str, int type)
 		return (0);
 	if (type == SINGLE_Q || type == DOUBLE_Q)
 	{
-		str++;
+		x++;
 		while (str[x] && str[x] != q)
 			x++;
+		if (str[x] == q)
+            x++;
+		return (x);
 	}
-	else
-	{
-		while (str[x] > 32 && !is_special(&str[x]))
-			x++;
-	}
-	return (x);
-}
-
-int quote_len(char *s)
-{
-	int		x;
-	char	q;
-
-	x = 0;
-	q = *s;
-
-	s++;
-	while (s[x] && s[x] != q)
+	while (str[x] > 32 && !is_special(&str[x]))
 		x++;
-	return x;
+	return (x);
 }
 
 char	*ft_strndup(const char *s, int n, int type)
@@ -99,14 +85,14 @@ char	*ft_strndup(const char *s, int n, int type)
 	if (n <= 0)
 		return (NULL);
 	i = 0;
-	dup = (char *) malloc(sizeof(char) * (n + 1));
-	if (dup == 0)
-		return (0);
 	if (type == SINGLE_Q || type == DOUBLE_Q)
 	{
 		s++;
-		n--;
+		n -= 2;
 	}
+	dup = (char *) malloc(sizeof(char) * (n + 1));
+	if (dup == 0)
+		return (0);
 	while (i < n)
 	{
 		dup[i] = s[i];
@@ -151,7 +137,7 @@ t_token *new_token(t_token_type type, char *str)
 	len = 1;
 	if (type > 7)
 		len = 2;
-	else if (type == 0)
+	else if (type <= 2)
 		len = ft_strlen(str, type);
 	token = malloc(sizeof(t_token));
 	if (!token)
