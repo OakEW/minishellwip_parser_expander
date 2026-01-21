@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 12:31:57 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 15:26:28 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token	*make_token(char *str, t_token_type type)
 	token->type = type;
 	if (str)
 	{
-		token->value = token_strndup(str, len, type);
+		token->value = token_strndup(str, len);
 		if (!token->value)
 			return (free(token), NULL);
 	}
@@ -66,30 +66,31 @@ int	precheck_line(char *line)
 	double_q = 0;
 	while (*line)
 	{
-		if (*line == '(')
+		if (*line == '\'' && double_q == 0)
+			single_q = !single_q;
+		else if (*line == '\"' && single_q == 0)
+			double_q = !double_q;
+		else if (*line == '(' && !single_q && !double_q)
 			parent++;
-		if (*line == ')')
+		else if (*line == ')' && !single_q && !double_q)
 		{
-			if (parent <= 0)
+			if (parent-- <= 0)
 				return (-1);
-			parent--;
 		}
-		single_q += (*line == '\'');
-		double_q += (*line == '\"');
 		line++;
 	}
-	if (parent != 0 || single_q % 2 != 0 || double_q % 2 != 0)
+	if (parent != 0 || single_q || double_q)
 		return (-1);
 	return (1);
 }
 
 t_token	*lexer(char	*line)
 {
-	int		i;
-	int		n;
-	t_token	*current;
-	t_token	*head;
-	int		type;
+	int				i;
+	int				n;
+	t_token			*current;
+	t_token			*head;
+	t_token_type	type;
 
 	if (precheck_line(line) < 0)
 		return (write (2, "syntax error\n", 14), NULL);

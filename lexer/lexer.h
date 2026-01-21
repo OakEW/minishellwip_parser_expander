@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 12:32:06 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 15:12:02 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_token
 int		is_operator(char *str);
 void	free_tokens(t_token *head);
 int		token_len(char *str, t_token_type type);
-char	*token_strndup(const char *s, int n, t_token_type type);
+char	*token_strndup(const char *s, int n);
 t_token	*make_token(char *str, t_token_type type);
 int		link_token(t_token **head, t_token **cur, t_token_type t, char *str);
 int		precheck_line(char *line);

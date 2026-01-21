@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 12:24:03 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 15:13:01 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	token_len(char *str, t_token_type type)
 	q = *str;
 	if (!str)
 		return (0);
-	if (type == SINGLE_Q || type == DOUBLE_Q)
+	if (q == '\'' || q == '\"')
 	{
 		x++;
 		while (str[x] && str[x] != q)
@@ -76,7 +76,7 @@ int	token_len(char *str, t_token_type type)
 	return (x);
 }
 
-char	*token_strndup(const char *s, int n, t_token_type type)
+char	*token_strndup(const char *s, int n)
 {
 	char	*dup;
 	int		i;
@@ -84,11 +84,6 @@ char	*token_strndup(const char *s, int n, t_token_type type)
 	if (n <= 0)
 		return (NULL);
 	i = 0;
-	if (type == SINGLE_Q || type == DOUBLE_Q)
-	{
-		s++;
-		n -= 2;
-	}
 	dup = (char *) malloc(sizeof(char) * (n + 1));
 	if (dup == 0)
 		return (0);
