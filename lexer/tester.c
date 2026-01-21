@@ -12,7 +12,7 @@ int print_tokens(char *line)
 	tmp = head;
 	while (tmp)
 	{
-		printf("Token type: %d, value: '%s'\n", tmp->type, tmp->value);
+		printf("Token type: %d, value: {%s}\n", tmp->type, tmp->value);
 		tmp = tmp->next;
 	}
 	free_tokens(head);
