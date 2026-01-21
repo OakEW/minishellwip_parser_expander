@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 15:13:01 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 16:57:44 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,20 +59,23 @@ int	token_len(char *str, t_token_type type)
 	char	q;
 
 	x = 0;
-	q = *str;
 	if (!str)
 		return (0);
-	if (q == '\'' || q == '\"')
+	while (str[x])
 	{
-		x++;
-		while (str[x] && str[x] != q)
+		if (str[x] == '\'' || str[x] == '\"')
+		{
+			q = str[x++];
+			while (str[x] && str[x] != q)
+				x++;
+			if (str[x] == q)
+				x++;
+		}
+		else if (str[x] <= 32 || is_operator(&str[x]))
+			break ;
+		else if (str[x] > 32 && !is_operator(&str[x]))
 			x++;
-		if (str[x] == q)
-			x++;
-		return (x);
 	}
-	while (str[x] > 32 && !is_operator(&str[x]))
-		x++;
 	return (x);
 }
 
