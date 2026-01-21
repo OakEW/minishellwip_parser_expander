@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 11:46:31 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:24:03 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	free_tokens(t_token *head)
 	}
 }
 
-int	token_len(char *str, int type)
+int	token_len(char *str, t_token_type type)
 {
 	int		x;
 	char	q;
@@ -76,7 +76,7 @@ int	token_len(char *str, int type)
 	return (x);
 }
 
-char	*token_strndup(const char *s, int n, int type)
+char	*token_strndup(const char *s, int n, t_token_type type)
 {
 	char	*dup;
 	int		i;
