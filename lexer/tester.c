@@ -1,12 +1,23 @@
+#include "lexer.h"
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
+#include<stdio.h>
 
-#include <termios.h>
-#include <stdio.h>
+int print_tokens(char *line)
+{
+
+	t_token *head;
+	t_token *tmp;
+
+	head = lexer(line);
+	tmp = head;
+	while (tmp)
+	{
+		printf("Token type: %d, value: '%s'\n", tmp->type, tmp->value);
+		tmp = tmp->next;
+	}
+	free_tokens(head);
+	return 0;
+}
 
 int print_pwd(void)
 {
@@ -17,6 +28,9 @@ int print_pwd(void)
 	free(pwd);
 	return (0);
 }
+
+
+
 
 void handle_sigint(int sig)	// ctrl -C
 {
@@ -44,6 +58,8 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		if (strcmp(line, "pwd") == 0)
 			print_pwd();
+		else
+			print_tokens(line);
 		free(line);
 	}
 	rl_clear_history();
