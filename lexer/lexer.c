@@ -6,13 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 12:24:21 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:31:57 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-t_token	*new_token(char *str, t_token_type type)
+t_token	*make_token(char *str, t_token_type type)
 {
 	t_token	*token;
 	int		len;
@@ -36,11 +36,11 @@ t_token	*new_token(char *str, t_token_type type)
 	return (token);
 }		
 
-int	make_token(t_token **head, t_token **current, t_token_type type, char *str)
+int	link_token(t_token **head, t_token **current, t_token_type type, char *str)
 {
 	t_token	*token;
 
-	token = new_token(str, type);
+	token = make_token(str, type);
 	if (!token)
 		return (-1);
 	if (!*head)
@@ -103,7 +103,7 @@ t_token	*lexer(char	*line)
 		if (line[i] == 0)
 			break ;
 		type = is_operator(&line[i]);
-		n = make_token(&head, &current, type, &line[i]);
+		n = link_token(&head, &current, type, &line[i]);
 		if (n < 0)
 			return (free_tokens(head), NULL);
 		i += n;
