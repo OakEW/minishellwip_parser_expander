@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 16:00:30 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/01/29 17:07:19 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ int	precheck_line(char *line)
 		else if (*line == ')' && !single_q && !double_q)
 		{
 			if (parent-- <= 0)
-				return (-1);
+				return (258);
 		}
 		line++;
 	}
 	if (parent != 0 || single_q || double_q)
-		return (-1);
-	return (1);
+		return (258);
+	return (0);
 }
 
 t_token	*lexer(char	*line)
@@ -92,8 +92,6 @@ t_token	*lexer(char	*line)
 	t_token			*head;
 	t_token_type	type;
 
-	if (precheck_line(line) < 0)
-		return (write (2, "syntax error\n", 14), NULL);
 	current = NULL;
 	head = NULL;
 	i = 0;

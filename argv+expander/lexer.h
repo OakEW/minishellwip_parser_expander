@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 16:26:11 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/02 16:58:42 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef enum e_token_type
 	APPEND,
 	THEN,
 	ELSE,
+	REDIR,
 }	t_token_type;
 
 typedef struct s_token
@@ -42,6 +43,29 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_redir
+{
+	t_token_type	type;
+	char			*file;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_argv
+{
+	t_token_type	type;
+	char			**argv;
+	t_redir			*redir;
+	int				argc;
+	struct s_argv	*next;
+}	t_argv;
+
+typedef struct s_env
+{
+	char	**env;
+	int		cap;
+	int		size;
+}	t_env;
+
 int		is_operator(char *str);
 void	free_tokens(t_token *head);
 int		token_len(char *str, t_token_type type);
@@ -50,5 +74,10 @@ t_token	*make_token(char *str, t_token_type type);
 int		link_token(t_token **head, t_token **cur, t_token_type t, char *str);
 int		precheck_line(char *line);
 t_token	*lexer(char	*line);
+void	free_argv(t_argv *head);
 
+char	*ft_strdup(char *s);
+t_env *init_env(char **envp);
+int	expander(char **str, t_env* env);
+size_t	ft_strlen(const char *str);
 #endif

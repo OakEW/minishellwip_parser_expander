@@ -1,4 +1,4 @@
-#include "ft_printf.h"
+
 # include <unistd.h>
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -124,7 +124,7 @@ int my_pwd(void)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		return (write(2, "No such file or directory\n", 27), -1);
-	ft_printf("%s\n", pwd);
+	printf("%s\n", pwd);
 	free(pwd);
 	return (0);
 }
@@ -148,8 +148,8 @@ void handle_sigint(int sig)	// ctrl -C
 
 void	do_buildin(char *line)
 {
-	while(*line && (*line == ' ' || *line == '\t' || *line == '\n'))
-		line++;
+	// while(*line && (*line == ' ' || *line == '\t' || *line == '\n'))
+	// 	line++;
 	if (*line)
 		add_history(line);
 	if (ft_strncmp(line, "pwd", 3) == 0)
