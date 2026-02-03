@@ -164,7 +164,6 @@ void trim_q(char *s)
 
 int	trim_expand(t_argv *curt, t_env *env)
 {
-	int		len;
 	int		i;
 
 	i = 0;
@@ -244,95 +243,95 @@ int	syntax_check(t_token *token)
 	return (0);
 }
 
-t_argv	*build_argv(char *line, t_env *env)
+int	build_argv(char *line, t_env *env, t_argv **out)
 {
 	t_token *token;
-	t_argv *head;
+	t_argv	*head;
 
+	*out = NULL;
 	token = lexer(line);
 	if (!token)
 	{
 		exit_status = 1;
-		return (NULL);
+		return (0);
 	}
 	if (precheck_line(line) != 0 || syntax_check(token) != 0)
 	{
 		exit_status = 258;
 		free_tokens(token);
-		return (write (2, "syntax error\n", 13), NULL);
+		return (write (2, "syntax error\n", 13), 0);
 	}
 	head = make_expand(token, env);
 	if (!head)
 	{
 		exit_status = 1;
-		free_tokens(token);
-		return (NULL);
+		return (free_tokens(token), 0);
 	}
+	*out = head;
 	free_tokens(token);				//tokens are freed here
-	return (head);
+	return (1);
 }
 
-// // for test
+// for test
 
 
-// void	print_argv(t_argv *head)
-// {
-// 	t_argv *tmp;
+void	print_argv(t_argv *head)
+{
+	t_argv *tmp;
 
-// 	int	x = 0;
-// 	tmp = head;
-// 	while (tmp)
-// 	{
-// 		int i = 0;
-// 		printf("struct[%d] type: %d\n",x, tmp->type);
-// 		while (i < tmp->argc)
-// 		{
-// 			printf("------->argv[%d]: {%s}\n", i, tmp->argv[i]);
-// 			i++;
-// 		}
-// 		printf ("\n");
-// 		x++;
-// 		tmp = tmp->next;
-// 	}
-// }
+	int	x = 0;
+	tmp = head;
+	while (tmp)
+	{
+		int i = 0;
+		printf("struct[%d] type: %d\n",x, tmp->type);
+		while (i < tmp->argc)
+		{
+			printf("------->argv[%d]: {%s}\n", i, tmp->argv[i]);
+			i++;
+		}
+		printf ("\n");
+		x++;
+		tmp = tmp->next;
+	}
+}
 
-// void handle_sigint(int sig)	// ctrl -C
-// {
-// 	(void)sig;
-// 	write(1, "\n", 1);
-// 	rl_replace_line("", 0);
-// 	rl_on_new_line();
-// 	rl_redisplay();
-// }
+void handle_sigint(int sig)	// ctrl -C
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char	*line;
-// 	t_argv *head;
-// 	t_env	*env;
+int	main(int argc, char **argv, char **envp)
+{
+	char	*line;
+	t_argv *head;
+	t_env	*env;
 
-// 	env = init_env(envp);
-// 	if (!env)
-// 		return (0);
-// 	signal(SIGQUIT, SIG_IGN);		//"ctrl -\"
-// 	signal(SIGINT, handle_sigint);	// ctrl -C
-// 	while (1)
-// 	{
-// 		line = readline("M-S $ ");
-// 		if (!line)
-// 			break ;
-// 		if (*line)
-// 			add_history(line);
-// 		head = build_argv(line, env);
-// 		if(head)
-// 		{
-// 			print_argv(head);
-// 			free_argv(head);							// free struct argv in main
-// 		}
-// 		free(line);
-// 	}
-// 	rl_clear_history();
-// 	write(1, "Exit Mini_Shell\n", 17);
-// 	// signal(SIGQUIT, SIG_DFL);
-// 	return (0);
-// }
+	env = init_env(envp);
+	if (!env)
+		return (0);
+	signal(SIGQUIT, SIG_IGN);		//"ctrl -\"
+	signal(SIGINT, handle_sigint);	// ctrl -C
+	while (1)
+	{
+		line = readline("M-S $ ");
+		if (!line)
+			break ;
+		if (*line)
+			add_history(line);
+		if(build_argv(line, env, &head))
+		{
+			print_argv(head);
+			free_argv(head);							// free struct argv in main
+		}
+		free(line);
+	}
+	rl_clear_history();
+	write(1, "Exit Mini_Shell\n", 17);
+	// signal(SIGQUIT, SIG_DFL);
+	return (0);
+}
