@@ -259,7 +259,7 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 	{
 		exit_status = 258;
 		free_tokens(token);
-		return (write (2, "syntax error\n", 13), 0);
+		return (write (2, RED"syntax error\n"RESET, 22), 0);
 	}
 	head = make_expand(token, env);
 	if (!head)
@@ -318,7 +318,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, handle_sigint);	// ctrl -C
 	while (1)
 	{
-		line = readline("M-S $ ");
+		line = readline(GREEN"M_S->"RESET);
 		if (!line)
 			break ;
 		if (*line)
@@ -331,7 +331,7 @@ int	main(int argc, char **argv, char **envp)
 		free(line);
 	}
 	rl_clear_history();
-	write(1, "Exit Mini_Shell\n", 17);
+	write(1, YELLOW"Exit Mini_Shell\n"RESET, 25);
 	// signal(SIGQUIT, SIG_DFL);
 	return (0);
 }

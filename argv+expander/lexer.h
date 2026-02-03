@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/02 16:58:42 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/03 18:24:30 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+
+# define RED     "\033[31m"
+# define GREEN   "\033[32m"
+# define YELLOW  "\033[33m"
+# define BLUE    "\033[34m"
+# define MAGENTA "\033[35m"
+# define CYAN    "\033[36m"
+# define WHITE   "\033[37m"
+# define RESET   "\033[0m"
 
 typedef enum e_token_type
 {
@@ -77,7 +86,7 @@ t_token	*lexer(char	*line);
 void	free_argv(t_argv *head);
 
 char	*ft_strdup(char *s);
-t_env *init_env(char **envp);
-int	expander(char **str, t_env* env);
+t_env	*init_env(char **envp);
+int		expander(char **str, t_env *env);
 size_t	ft_strlen(const char *str);
 #endif
