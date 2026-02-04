@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/03 18:24:30 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/04 13:42:48 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	free_argv(t_argv *head);
 
 char	*ft_strdup(char *s);
 t_env	*init_env(char **envp);
+void	free_env(t_env *env);
 int		expander(char **str, t_env *env);
 size_t	ft_strlen(const char *str);
+int	trim_expand(t_argv *head, t_argv *curt, t_env *env);
 #endif

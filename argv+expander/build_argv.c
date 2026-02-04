@@ -14,7 +14,7 @@ void	free_argv(t_argv *head)
 		head = head->next;
 		if (tmp->argv)
 		{
-			while (tmp->argv[i])
+			while (i < tmp->argc)
 			{
 				free(tmp->argv[i]);
 				i++;
@@ -53,6 +53,49 @@ char	*ft_strdup(char *s)
 	}
 	dup[i] = '\0';
 	return (dup);
+}
+
+int	op_mix(t_token_type x)
+{
+	if (x == PIPE || x == THEN || x == ELSE)
+		return (1);
+	else if (x == INPUT || x == OUTPUT || x == HEREDOC || x == APPEND)
+		return (2);
+	else if (x == PARENT_O)
+		return (3);
+	else if (x == PARENT_C)
+		return (4);
+	else
+		return (0);
+}
+
+int	syntax_check(t_token *token)
+{
+	t_token	*tmp;
+
+	tmp = token;
+	if (op_mix(token->type) == 1)
+		return (258);
+	while (tmp)
+	{
+		if (tmp->next == NULL && op_mix(tmp->type) > 0 && op_mix(tmp->type) < 3)
+			return (258);
+		if (op_mix(tmp->type) == 1 && tmp->next && op_mix(tmp->next->type) == 1)
+			return (258);
+		if (op_mix(tmp->type) == 1 && tmp->next && op_mix(tmp->next->type) == 4)
+			return (258);
+		if (op_mix(tmp->type) == 2 && tmp->next && op_mix(tmp->next->type) > 0)
+			return (258);
+		if (op_mix(tmp->type) == 3 && tmp->next && op_mix(tmp->next->type) == 1)
+			return (258);
+		if (op_mix(tmp->type) == 3 && tmp->next && op_mix(tmp->next->type) == 4)
+			return (258);
+		if (tmp->next && tmp->next->next && op_mix(tmp->type) == 2
+				&& op_mix(tmp->next->type) == 0 && op_mix(tmp->next->next->type) >= 3)
+			return (258);
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
 t_argv	*argv_init(t_token *token)
@@ -113,7 +156,7 @@ int	make_str(t_argv *argv, t_token *token)
 	return (0);
 }
 
-t_token	*make_argv(t_argv **head, t_argv **curt, t_token *token, int *flag)
+t_token	*make_argv_helper(t_argv **head, t_argv **curt, t_token *token, int *flag)
 {
 	t_token			*start;
 	t_argv			*new;
@@ -137,49 +180,7 @@ t_token	*make_argv(t_argv **head, t_argv **curt, t_token *token, int *flag)
 	return (token);
 }
 
-void trim_q(char *s)
-{
-	int	i;
-	int	n;
-	int	sq;
-	int	dq;
-
-	i = 0;
-	n = 0;
-	sq = 0;
-	dq = 0;
-	while (s[i])
-	{
-		if (s[i] == '\'' && !dq)
-			sq = !sq;
-		else if (s[i] == '\"' && !sq)
-			dq = !dq;
-		else
-			s[n++] = s[i];
-		i++;
-	}
-	s[n] = 0;
-}
-
-
-int	trim_expand(t_argv *curt, t_env *env)
-{
-	int		i;
-
-	i = 0;
-	while (curt->argv[i])
-	{
-		if (curt->type <= 2)
-		{
-			expander(&curt->argv[i], env);//		do not expand '$'
-			trim_q(curt->argv[i]);
-		}
-		i++;
-	}
-	return (0);
-}
-
-t_argv	*make_expand(t_token *token, t_env*env)
+t_argv	*make_argv(t_token *token, t_env*env)
 {
 	t_argv	*current;
 	t_argv	*head;
@@ -194,53 +195,10 @@ t_argv	*make_expand(t_token *token, t_env*env)
 		return (NULL);
 	while (tmp)
 	{
-		tmp = make_argv(&head, &current, tmp, &flag);
-		trim_expand(current, env);
+		tmp = make_argv_helper(&head, &current, tmp, &flag);
+		// trim_expand(current, env);
 	}
 	return (head);
-}
-
-int	op_mix(t_token_type x)
-{
-	if (x == PIPE || x == THEN || x == ELSE)
-		return (1);
-	else if (x == INPUT || x == OUTPUT || x == HEREDOC || x == APPEND)
-		return (2);
-	else if (x == PARENT_O)
-		return (3);
-	else if (x == PARENT_C)
-		return (4);
-	else
-		return (0);
-}
-
-int	syntax_check(t_token *token)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	if (op_mix(token->type) == 1)
-		return (258);
-	while (tmp)
-	{
-		if (tmp->next == NULL && op_mix(tmp->type) > 0 && op_mix(tmp->type) < 3)
-			return (258);
-		if (op_mix(tmp->type) == 1 && tmp->next && op_mix(tmp->next->type) == 1)
-			return (258);
-		if (op_mix(tmp->type) == 1 && tmp->next && op_mix(tmp->next->type) == 4)
-			return (258);
-		if (op_mix(tmp->type) == 2 && tmp->next && op_mix(tmp->next->type) > 0)
-			return (258);
-		if (op_mix(tmp->type) == 3 && tmp->next && op_mix(tmp->next->type) == 1)
-			return (258);
-		if (op_mix(tmp->type) == 3 && tmp->next && op_mix(tmp->next->type) == 4)
-			return (258);
-		if (tmp->next && tmp->next->next && op_mix(tmp->type) == 2
-				&& op_mix(tmp->next->type) == 0 && op_mix(tmp->next->next->type) >= 3)
-			return (258);
-		tmp = tmp->next;
-	}
-	return (0);
 }
 
 int	build_argv(char *line, t_env *env, t_argv **out)
@@ -261,7 +219,7 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 		free_tokens(token);
 		return (write (2, RED"syntax error\n"RESET, 22), 0);
 	}
-	head = make_expand(token, env);
+	head = make_argv(token, env);
 	if (!head)
 	{
 		exit_status = 1;
@@ -275,7 +233,7 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 // for test
 
 
-void	print_argv(t_argv *head)
+int	print_argv(t_argv *head, t_env *env)
 {
 	t_argv *tmp;
 
@@ -284,16 +242,19 @@ void	print_argv(t_argv *head)
 	while (tmp)
 	{
 		int i = 0;
-		printf("struct[%d] type: %d\n",x, tmp->type);
 		while (i < tmp->argc)
 		{
-			printf("------->argv[%d]: {%s}\n", i, tmp->argv[i]);
+			if (trim_expand(head, tmp, env) < 0)
+				return (-1);
+			printf(BLUE"t_argv[%d] type:%d",x, tmp->type);
+			printf(GREEN" -->argv[%d]: {%s}\n"RESET, i, tmp->argv[i]);
 			i++;
 		}
 		printf ("\n");
 		x++;
 		tmp = tmp->next;
 	}
+	return (0);
 }
 
 void handle_sigint(int sig)	// ctrl -C
@@ -325,12 +286,13 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		if(build_argv(line, env, &head))
 		{
-			print_argv(head);
+			print_argv(head, env);
 			free_argv(head);							// free struct argv in main
 		}
 		free(line);
 	}
 	rl_clear_history();
+	free_env(env);
 	write(1, YELLOW"Exit Mini_Shell\n"RESET, 25);
 	// signal(SIGQUIT, SIG_DFL);
 	return (0);
