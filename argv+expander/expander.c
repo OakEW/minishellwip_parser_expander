@@ -227,8 +227,11 @@ int	expander(char **str, t_env* env)
 				return (0);
 			i--;
 		}
-		if ((*str)[i] != '$')
-			i++;
+		i++;
+		// if ((*str)[i] == '$' && q_s != 0)
+		// 	i++;
+		// if ((*str)[i] != '$')
+		// 	i++;
 	}
 	return (1);
 }
@@ -252,11 +255,11 @@ int	expander(char **str, t_env* env)
 // 	free(rm);
 // }
 
-int	rm_empty(t_argv *head, t_argv *curt, int i)
+int	rm_empty(t_argv *curt, int i)
 {
-	if (curt->argc == 1 && !head->next) // if only 1 node && t_argv *current is emt, == !line
-		return (-1);
-	if (curt->argc == 1 && head->next)	// if > 1 node && t_argv *current is emt, set node to NULL
+	// if (curt->argc == 1 && !head->next) // if only 1 node && t_argv *current is emt, == !line
+	// 	return (-1);
+	if (curt->argc == 1)	// if t_argv *current is emt, set node to NULL
 	{
 		free (curt->argv[0]);
 		curt->argv[0] = NULL;
@@ -299,7 +302,7 @@ void trim_q(char *s)
 	s[n] = 0;
 }
 
-int	trim_expand(t_argv *head, t_argv *curt, t_env *env)
+int	trim_expand(t_argv *curt, t_env *env)
 {
 	int	i;
 	int	flag;
@@ -313,7 +316,7 @@ int	trim_expand(t_argv *head, t_argv *curt, t_env *env)
 			expander(&curt->argv[i], env);
 			if (curt->argv[i][0] == 0)
 			{
-				flag = rm_empty(head, curt, i);
+				flag = rm_empty(curt, i);
 				if (flag == -1) //return -1 if !line after expand
 					return (-1);
 				if (flag == 1)

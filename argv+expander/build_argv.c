@@ -244,8 +244,7 @@ int	print_argv(t_argv *head, t_env *env)
 		int i = 0;
 		while (i < tmp->argc)
 		{
-			if (trim_expand(head, tmp, env) < 0)
-				return (-1);
+			trim_expand(tmp, env);
 			printf(BLUE"t_argv[%d] type:%d",x, tmp->type);
 			printf(GREEN" -->argv[%d]: {%s}\n"RESET, i, tmp->argv[i]);
 			i++;
