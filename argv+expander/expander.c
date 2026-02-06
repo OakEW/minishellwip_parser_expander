@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
+/*   Updated: 2026/02/06 17:45:15 by ywang2           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "argv_env.h"
 
-char	*find_var(char *str, t_env* env)
+char	*find_var(char *str, t_env *env)
 {
 	int	i;
 	int	j;
@@ -11,7 +23,8 @@ char	*find_var(char *str, t_env* env)
 	while (env->env[j])
 	{
 		i = 0;
-		while (env->env[j][i] && env->env[j][i] != '=' && str[i] && env->env[j][i] == str[i])
+		while (env->env[j][i] && env->env[j][i] != '='
+			&& str[i] && env->env[j][i] == str[i])
 			i++;
 		if (env->env[j][i] == '=' && !is_al(str[i]))
 			return (&(env->env[j][i + 1]));
@@ -23,9 +36,8 @@ char	*find_var(char *str, t_env* env)
 char	*var_join(char **str, char *add, int pos, int len)
 {
 	char	*join;
-	int	 i;
-	int	 j;
-	int	 k;
+	int		i;
+	int		k;
 
 	join = malloc(sizeof(char) * (len + 1));
 	if (!join)
@@ -36,9 +48,8 @@ char	*var_join(char **str, char *add, int pos, int len)
 		join[i] = (*str)[i];
 		i++;
 	}
-	j = 0;
-	while (add && add[j])
-		join[i++] = add[j++];
+	while (add && *add)
+		join[i++] = *add++;
 	k = pos;
 	while ((*str)[k] && is_al((*str)[k]))
 		k++;
@@ -50,6 +61,23 @@ char	*var_join(char **str, char *add, int pos, int len)
 	return (join);
 }
 
+char	*replace_var_helper(char **str, char *add, int i, t_env *env)
+{
+	char	*exit_s;
+	char	*new;
+	int		len;
+
+	exit_s = ft_itoa(env->exit_s);
+	if (!exit_s)
+		return (NULL);
+	len = ft_strlen(*str) - 2 + get_len(env->exit_s) + 1;
+	new = var_join(str, exit_s, i, len);
+	if (!new)
+		return (free(exit_s), NULL);
+	free(exit_s);
+	return (new);
+}
+
 int	replace_var(char **str, char *add, int i, t_env *env)
 {
 	char	*exit_s;
@@ -57,32 +85,40 @@ int	replace_var(char **str, char *add, int i, t_env *env)
 	int		len;
 	int		subtract;
 
-	len = ft_strlen(*str);
 	if ((*str)[i] == '?')
 	{
-		exit_s = ft_itoa(env->exit_s);
-		if (!exit_s)
+		new = replace_var_helper(str, add, i, env);
+		if (!new)
 			return (0);
-		len = len - 2 + get_len(env->exit_s) + 1;
-		new = var_join(str, exit_s, i, len);
-		free(exit_s);
 	}
 	else
 	{
 		subtract = 0;
 		while ((*str)[i + subtract] && is_al((*str)[i + subtract]))
 			subtract++;
-		len = len - subtract - 2 + ft_strlen(add) + 1;
+		len = ft_strlen(*str) - subtract - 2 + ft_strlen(add) + 1;
 		new = var_join(str, add, i, len);
+		if (!new)
+			return (0);
 	}
-	if (!new)
-		return (0);
 	free(*str);
 	*str = new;
 	return (1);
 }
 
-int	expander(char **str, t_env* env)
+int	check_q(char c, int *q_s, int *q_d)
+{
+	if (c == '\"' && *q_s == 0)
+		*q_d = !(*q_d);
+	if (c == '\'' && *q_d == 0)
+		*q_s = !(*q_s);
+	if (c == '$' && *q_s == 0)
+		return (1);
+	else
+		return (0);
+}
+
+int	expander(char **str, t_env *env)
 {
 	int		i;
 	int		q_s;
@@ -92,13 +128,9 @@ int	expander(char **str, t_env* env)
 	i = 0;
 	q_s = 0;
 	q_d = 0;
-	while((*str)[i])
+	while ((*str)[i])
 	{
-		if ((*str)[i] == '\"' && q_s == 0)
-			q_d = !q_d;
-		if ((*str)[i] == '\'' && q_d == 0)
-			q_s = !q_s;
-		if ((*str)[i] == '$' && q_s == 0)
+		if (check_q((*str)[i], &q_s, &q_d))
 		{
 			i++;
 			if ((*str)[i] == 0)
@@ -110,8 +142,8 @@ int	expander(char **str, t_env* env)
 			else
 				var = find_var(&(*str)[i], env);
 			if (!replace_var(str, var, i, env))
-				return (0);
-			i--;
+				return (perror("malloc"), env->exit_s = ENOMEM, 0);
+			i -= 2;
 		}
 		i++;
 	}

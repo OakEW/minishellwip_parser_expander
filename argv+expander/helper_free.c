@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 14:58:56 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/06 16:38:24 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	free_env(t_env *env)
 	i = 0;
 	while (i < env->size)
 	{
-		free (env->env[i]);
+		if (env->env[i])
+			free (env->env[i]);
 		i++;
 	}
 	if (env->env)
@@ -66,7 +67,8 @@ void	free_argv(t_argv *head)
 		{
 			while (i < tmp->argc)
 			{
-				free(tmp->argv[i]);
+				if (tmp->argv[i])
+					free(tmp->argv[i]);
 				i++;
 			}
 			free(tmp->argv);

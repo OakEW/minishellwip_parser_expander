@@ -1,15 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   trimmer.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/06 15:33:18 by ywang2            #+#    #+#             */
+/*   Updated: 2026/02/06 15:44:05 by ywang2           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "argv_env.h"
 
 int	rm_empty(t_argv *curt, int i)
 {
-	if (curt->argc == 1)	// if t_argv *current is emt, set node to NULL
+	if (curt->argc == 1)
 	{
 		free (curt->argv[0]);
 		curt->argv[0] = NULL;
 		curt->argc = 0;
 		return (1);
 	}
-	while (i < curt->argc - 1)	// else remove argv[i] from node
+	while (i < curt->argc - 1)
 	{
 		free (curt->argv[i]);
 		curt->argv[i] = ft_strdup(curt->argv[i + 1]);
@@ -21,7 +33,7 @@ int	rm_empty(t_argv *curt, int i)
 	return (0);
 }
 
-void trim_q(char *s)
+void	trim_q(char *s)
 {
 	int	i;
 	int	n;
@@ -62,9 +74,9 @@ int	trim_expand(t_argv *curt, t_env *env)
 			{
 				flag = rm_empty(curt, i);
 				if (flag == 1)
-					break;
+					break ;
 				if (flag == 0)
-					continue;
+					continue ;
 			}
 			trim_q(curt->argv[i]);
 		}

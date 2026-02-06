@@ -20,11 +20,12 @@ SRC=			main.c															\
 				wildcard.c														\
 				init_env.c														\
 				parser.c														\
+				parser_helper.c													\
 				syntax_check.c													\
 				expander.c														\
 				trimmer.c														\
 				helper_itoa.c													\
-				helper_free.c													\
+				helper_free.c
 
 SRC_DIR=		src/
 

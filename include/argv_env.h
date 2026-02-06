@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 14:59:22 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/06 17:40:36 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,17 @@ char	*ft_strdup(char *s);
 t_env 	*init_env(char **envp);
 
 //syntax_check.c
-int		op_mix(t_token_type x);
+int		o_p(t_token_type x);
 int		syntax_check(t_token *token);
+int		syntax_error(char *line, t_token *token, t_env *env);
 
-//parser.c
+//parser_helper.c
 t_argv	*argv_init(t_token *token);
 int		count_argc(t_token **token, int *flag);
 int		make_str(t_argv *argv, t_token *token);
-t_token	*make_argv_helper(t_argv **h, t_argv **curt, t_token *t, int *f);
+
+//parser.c
+int		make_argv_helper(t_argv **h, t_argv **curt, t_token **t, int *f);
 t_argv	*make_argv(t_token *token, t_env*env);
 int		build_argv(char *line, t_env *env, t_argv **out);
 
