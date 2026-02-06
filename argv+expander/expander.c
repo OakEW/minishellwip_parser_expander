@@ -1,112 +1,4 @@
-#include "lexer.h"
-
-extern int	exit_status;
-
-
-void	free_env(t_env *env)
-{
-	int	i;
-
-	i = 0;
-	while (i < env->size)
-	{
-		free (env->env[i]);
-		i++;
-	}
-	if (env->env)
-		free (env->env);
-	if (env)
-		free (env);
-}
-
-t_env *init_env(char **envp)
-{
-	int	i;
-	t_env	*env;
-
-	i = 0;
-	env = malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
-	env->size = 0;
-	while (envp[i])
-		i++;
-	env->cap = i * 2;
-	env->env = malloc(sizeof(char *) * env->cap);
-	if (!env->env)
-		return (free_env(env), free(env), NULL);
-	i = 0;
-	while (envp[i])
-	{
-		env->env[i] = ft_strdup(envp[i]);
-		if (!env->env[i])
-			return (free_env(env), free(env), NULL);
-		i++;
-	}
-	env->env[i] = NULL;
-	env->size = i;
-	return (env);
-}
-
-
-int	is_al(char c)
-{
-	if (c == '_')
-		return (1);
-	else if (c >= 'a' && c <= 'z')
-		return (1);
-	else if (c >= 'A' && c <= 'Z')
-		return (1);
-	else if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
-int	get_len(int n)
-{
-	int		i;
-	long	nb;
-
-	i = 1;
-	nb = (long)n;
-	if (nb < 0)
-	{
-		nb *= -1;
-		i = 2;
-	}
-	while (nb > 9)
-	{
-		nb = nb / 10;
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_itoa(int n)
-{
-	char	*str;
-	int		i;
-	long	m;
-
-	i = get_len(n);
-	m = (long)n;
-	if (m < 0)
-		m *= -1;
-	str = (char *) malloc(sizeof(char) * (i + 1));
-	if (str == NULL)
-		return (NULL);
-	str[0] = '-';
-	str[i] = '\0';
-	i--;
-	while (m > 9)
-	{
-		str[i] = m % 10 + '0';
-		m = m / 10;
-		i--;
-	}
-	str[i] = m + '0';
-	return (&str[0]);
-}
+#include "argv_env.h"
 
 char	*find_var(char *str, t_env* env)
 {
@@ -126,12 +18,6 @@ char	*find_var(char *str, t_env* env)
 		j++;
 	}
 	return (NULL);
-}
-
-void	free_exit_s(char **str, char *add, int x)
-{
-	if (x == '?')
-		free(add);
 }
 
 char	*var_join(char **str, char *add, int pos, int len)
@@ -164,7 +50,7 @@ char	*var_join(char **str, char *add, int pos, int len)
 	return (join);
 }
 
-int	replace_var(char **str, char *add, int i)
+int	replace_var(char **str, char *add, int i, t_env *env)
 {
 	char	*exit_s;
 	char	*new;
@@ -174,10 +60,10 @@ int	replace_var(char **str, char *add, int i)
 	len = ft_strlen(*str);
 	if ((*str)[i] == '?')
 	{
-		exit_s = ft_itoa(exit_status);
+		exit_s = ft_itoa(env->exit_s);
 		if (!exit_s)
 			return (0);
-		len = len - 2 + get_len(exit_status) + 1;
+		len = len - 2 + get_len(env->exit_s) + 1;
 		new = var_join(str, exit_s, i, len);
 		free(exit_s);
 	}
@@ -223,110 +109,11 @@ int	expander(char **str, t_env* env)
 				continue ;
 			else
 				var = find_var(&(*str)[i], env);
-			if (!replace_var(str, var, i))
+			if (!replace_var(str, var, i, env))
 				return (0);
 			i--;
 		}
 		i++;
-		// if ((*str)[i] == '$' && q_s != 0)
-		// 	i++;
-		// if ((*str)[i] != '$')
-		// 	i++;
 	}
 	return (1);
-}
-
-// void	rm_node(t_argv *head, t_argv *rm)
-// {
-// 	t_argv	*tmp;
-// 	int		i;
-
-// 	i = 0;
-// 	tmp = head;
-// 	while(tmp && tmp->next && tmp->next != rm)
-// 		tmp = tmp->next;
-// 	tmp->next = rm->next;
-// 	while (i < rm->argc)
-// 	{
-// 		free(rm->argv[i]);
-// 		i++;
-// 	}
-// 	free(rm->argv);
-// 	free(rm);
-// }
-
-int	rm_empty(t_argv *curt, int i)
-{
-	// if (curt->argc == 1 && !head->next) // if only 1 node && t_argv *current is emt, == !line
-	// 	return (-1);
-	if (curt->argc == 1)	// if t_argv *current is emt, set node to NULL
-	{
-		free (curt->argv[0]);
-		curt->argv[0] = NULL;
-		curt->argc = 0;
-		return (1);
-	}
-	while (i < curt->argc - 1)	// else remove argv[i] from node
-	{
-		free (curt->argv[i]);
-		curt->argv[i] = ft_strdup(curt->argv[i + 1]);
-		i++;
-	}
-	free (curt->argv[i]);
-	curt->argv[i] = NULL;
-	curt->argc--;
-	return (0);
-}
-
-void trim_q(char *s)
-{
-	int	i;
-	int	n;
-	int	sq;
-	int	dq;
-
-	i = 0;
-	n = 0;
-	sq = 0;
-	dq = 0;
-	while (s[i])
-	{
-		if (s[i] == '\'' && !dq)
-			sq = !sq;
-		else if (s[i] == '\"' && !sq)
-			dq = !dq;
-		else
-			s[n++] = s[i];
-		i++;
-	}
-	s[n] = 0;
-}
-
-int	trim_expand(t_argv *curt, t_env *env)
-{
-	int	i;
-	int	flag;
-
-	i = 0;
-	while (curt->argv[i])
-	{
-		if (curt->type <= 2)
-		{
-			flag = 10;
-			expander(&curt->argv[i], env);
-			if (curt->argv[i][0] == 0)
-			{
-				flag = rm_empty(curt, i);
-				if (flag == -1) //return -1 if !line after expand
-					return (-1);
-				if (flag == 1)
-					break;
-				if (flag == 0)
-					continue;
-			}
-			trim_q(curt->argv[i]);
-		}
-		i++;
-	}
-	return (0);
 }

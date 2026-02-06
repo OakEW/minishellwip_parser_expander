@@ -6,11 +6,11 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/01/21 16:58:00 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/06 14:38:45 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "argv_env.h"
 
 int	is_operator(char *str)
 {
@@ -37,20 +37,6 @@ int	is_operator(char *str)
 	else if (*str == '\"')
 		return (DOUBLE_Q);
 	return (0);
-}
-
-void	free_tokens(t_token *head)
-{
-	t_token	*tmp;
-
-	while (head)
-	{
-		tmp = head;
-		head = head->next;
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
 }
 
 int	token_len(char *str, t_token_type type)
