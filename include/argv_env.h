@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 17:40:36 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/06 18:00:29 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,14 @@ int		is_al(char c);
 int		get_len(int n);
 char	*ft_itoa(int n);
 
+//expander_helper.c
+int		check_q(char c, int *q_s, int *q_d);
+void	int_init(int *i);
+
 //expander.c
 char	*find_var(char *str, t_env* env);
 char	*var_join(char **str, char *add, int pos, int len);
+char	*replace_var_helper(char **str, char *add, int i, t_env *env);
 int		replace_var(char **str, char *add, int i, t_env *env);
 int		expander(char **str, t_env* env);
 

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 17:45:15 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/06 18:00:41 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,46 +106,30 @@ int	replace_var(char **str, char *add, int i, t_env *env)
 	return (1);
 }
 
-int	check_q(char c, int *q_s, int *q_d)
-{
-	if (c == '\"' && *q_s == 0)
-		*q_d = !(*q_d);
-	if (c == '\'' && *q_d == 0)
-		*q_s = !(*q_s);
-	if (c == '$' && *q_s == 0)
-		return (1);
-	else
-		return (0);
-}
-
 int	expander(char **str, t_env *env)
 {
-	int		i;
-	int		q_s;
-	int		q_d;
+	int		i[3];
 	char	*var;
 
-	i = 0;
-	q_s = 0;
-	q_d = 0;
-	while ((*str)[i])
+	int_init(i);
+	while ((*str)[i[0]])
 	{
-		if (check_q((*str)[i], &q_s, &q_d))
+		if (check_q((*str)[i[0]], &i[1], &i[2]))
 		{
-			i++;
-			if ((*str)[i] == 0)
+			i[0]++;
+			if ((*str)[i[0]] == 0)
 				break ;
-			if ((*str)[i] == '?')
+			if ((*str)[i[0]] == '?')
 				var = NULL;
-			else if (!is_al((*str)[i]))
+			else if (!is_al((*str)[i[0]]))
 				continue ;
 			else
-				var = find_var(&(*str)[i], env);
-			if (!replace_var(str, var, i, env))
+				var = find_var(&(*str)[i[0]], env);
+			if (!replace_var(str, var, i[0], env))
 				return (perror("malloc"), env->exit_s = ENOMEM, 0);
-			i -= 2;
+			i[0] -= 2;
 		}
-		i++;
+		i[0]++;
 	}
 	return (1);
 }
