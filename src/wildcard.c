@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:29:41 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 21:00:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,12 @@ char	**get_entry(t_env *env)
 	while (entry != NULL)
 	{
 		if (entry->d_name[0] != '.')
-			stash[i++] = ft_strdup(entry->d_name);
+		{
+			stash[i] = ft_strdup(entry->d_name);
+			if (!stash)
+				return (malloc_fail(env), free_strstr(stash), NULL);
+			i++;
+		}
 		entry = readdir(cwd);
 	}
 	stash[i] = NULL;
@@ -89,12 +94,30 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 	if (!new)
 		return (malloc_fail(env), 0);
 	while (i < pos)
-		new[i++] = ft_strdup(curt->argv[x++]);
+	{
+		new[i] = ft_strdup(curt->argv[x]);
+		if (!new[i])
+			return (malloc_fail(env), free_strstr(new), 0);
+		x++;
+		i++;
+	}
 	x++;
 	while (*entry)
-		new[i++] = ft_strdup(*entry++);
+	{
+		new[i] = ft_strdup(*entry);
+		if (!new[i])
+			return (malloc_fail(env), free_strstr(new), 0);
+		i++;
+		entry++;
+	}
 	while (curt->argv[x])
-		new[i++] = ft_strdup(curt->argv[x++]);
+	{
+		new[i] = ft_strdup(curt->argv[x]);
+		if (!new[i])
+			return (malloc_fail(env), free_strstr(new), 0);
+		i++;
+		x++;
+	}
 	new[i] = 0;
 	free_strstr(curt->argv);
 	curt->argv = new;
@@ -118,7 +141,7 @@ int	wildcards(t_argv *curt, t_env *env)
 		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
 		{		
 			if (!join_wild(curt, i, entry, env))
-				return (free_strstr(entry), 0);
+				return (0);
 			i = 0;
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 16:45:51 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 19:58:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	make_str(t_argv *argv, t_token *token)
 	n = 0;
 	argv->argv = malloc(sizeof(char *) * (argv->argc + 1));
 	if (!argv->argv)
-		return (-1);
+		return (free(argv), -1);
 	while (n < argv->argc)
 	{
 		argv->argv[n] = ft_strdup(token->value);

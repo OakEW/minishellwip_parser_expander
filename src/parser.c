@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:30:26 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 19:59:45 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ t_argv	*make_argv(t_token *token)
 	head = NULL;
 	tmp = token;
 	flag = -1;
-	if (!token)
-		return (NULL);
 	while (tmp)
 	{
 		if (!make_argv_helper(&head, &current, &tmp, &flag))

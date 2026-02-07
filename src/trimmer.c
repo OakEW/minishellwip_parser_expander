@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:18 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 15:44:05 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 20:53:22 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	rm_empty(t_argv *curt, int i)
 	{
 		free (curt->argv[i]);
 		curt->argv[i] = ft_strdup(curt->argv[i + 1]);
+		if (!curt->argv[i])
+			return (-1);
 		i++;
 	}
 	free (curt->argv[i]);
@@ -63,16 +65,20 @@ int	trim_expand(t_argv *curt, t_env *env)
 	int	flag;
 
 	i = 0;
-	wildcards(curt, env);
+	if (!wildcards(curt, env))
+		return (0);
 	while (curt->argv[i])
 	{
 		if (curt->type <= 2)
 		{
 			flag = 10;
-			expander(&curt->argv[i], env);
+			if (!expander(&curt->argv[i], env))
+				return (0);
 			if (curt->argv[i][0] == 0)
 			{
 				flag = rm_empty(curt, i);
+				if (flag == -1)
+					return (malloc_fail(env), 0);
 				if (flag == 1)
 					break ;
 				if (flag == 0)
@@ -82,5 +88,5 @@ int	trim_expand(t_argv *curt, t_env *env)
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }

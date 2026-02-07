@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 19:17:22 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 20:54:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	print_argv(t_argv *head, t_env *env)
 		i = 0;
 		while (i < tmp->argc)
 		{
-			trim_expand(tmp, env);		//expander($ and *) and trim off outer qoutes
+			if(!trim_expand(tmp, env))	//expander($ and *) and trim off outer qoutes
+				return (free_argv(head), 0);
 			printf(BLUE "t_argv[%d] type:%d", x, tmp->type);
 			printf(GREEN " -->argv[%d]: {%s}\n" RESET, i, tmp->argv[i]);
 			i++;
@@ -34,7 +35,7 @@ int	print_argv(t_argv *head, t_env *env)
 		x++;
 		tmp = tmp->next;
 	}
-	return (0);
+	return (1);
 }
 
 // ctrl -C
@@ -57,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);					//init t_env includes exit_status
-	if (!env)
+	if (!env)								//return NULL on fail, t_env is freed
 		return (0);
 	signal(SIGQUIT, SIG_IGN);				// ctrl -/
 	signal(SIGINT, handle_sigint);			// ctrl -C
