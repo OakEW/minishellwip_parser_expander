@@ -6,20 +6,32 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 16:16:03 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 18:01:25 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-int	ft_strcmp(char *s1, char *s2)
+float	ft_strcmp(char *s1, char *s2)
 {
-	int	i;
+	int		i;
+	float	x;
+	float	y;
 
 	i = 0;
-	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+	while (s1[i] && s2[i])
+	{
+		x = (float)s1[i];
+		if (x >= 'A' && x<= 'Z')
+			x += 31.5;
+		y = (float)s2[i];
+		if (y >= 'A' && y<= 'Z')
+			y += 31.5;
+		if (x != y)
+			break;
 		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	}
+	return (x - y);
 }
 
 void	sort_entry(char **entry)

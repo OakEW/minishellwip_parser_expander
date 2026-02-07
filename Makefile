@@ -1,4 +1,4 @@
-NAME= minishell
+NAME= wip_minishell
 
 SRC_DIR= src/
 OBJ_DIR= obj/
@@ -15,14 +15,14 @@ LIB= -lreadline
 all: ${NAME}
 
 ${NAME}: ${OBJ}
-	@echo "[${NAME}] Compiling $@"
+	@printf "\033[0;32mCompiling %s\033[0m\n" "$@"
 	@cc -Wall -Wextra -g -O0 -I${INC} -o $@ $^ ${LIB}
 
 ${OBJ_DIR}:
 	mkdir -p ${OBJ_DIR}
 
 ${OBJ_DIR}%.o: ${SRC_DIR}%.c | ${OBJ_DIR}
-	@echo "[${NAME}] Compiling $@"
+	@printf "\033[0;32mCompiling %s\033[0m\n" "$@"
 	@cc -Wall -Wextra -g -O0 -I${INC} -c $< -o $@
 
 clean:

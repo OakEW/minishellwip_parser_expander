@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:32:49 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 18:01:46 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	free_argv(t_argv *head);
 void	malloc_fail(t_env *env);
 
 //sort_strs.c
-int		ft_strcmp(char *s1, char *s2);
+float	ft_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
 
 #endif
