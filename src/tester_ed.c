@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:28:21 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 19:17:22 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	print_argv(t_argv *head, t_env *env)
 		i = 0;
 		while (i < tmp->argc)
 		{
-			trim_expand(tmp, env);
+			trim_expand(tmp, env);		//expander($ and *) and trim off outer qoutes
 			printf(BLUE "t_argv[%d] type:%d", x, tmp->type);
 			printf(GREEN " -->argv[%d]: {%s}\n" RESET, i, tmp->argv[i]);
 			i++;
@@ -56,11 +56,11 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	env = init_env(envp);
+	env = init_env(envp);					//init t_env includes exit_status
 	if (!env)
 		return (0);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);				// ctrl -/
+	signal(SIGINT, handle_sigint);			// ctrl -C
 	while (1)
 	{
 		line = readline(GREEN"M_S->"RESET);
@@ -68,15 +68,15 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (*line)
 			add_history(line);
-		i = build_argv(line, env, &head);
-		if (i == -1)
+		i = build_argv(line, env, &head);	//init t_argv (do lexer then parser + syntax check)
+		if (i == -1)						//return (-1)when line is empty, line is freed
 			continue ;
-		if (i == 1)
+		if (i == 1)							//return (1) on success, t_token is freed
 		{
-			print_argv(head, env);
+			print_argv(head, env);			// expand and trim qoutes in "child"
 			env->exit_s = 0;
 			free_argv(head);
-		}
+		}									//return (0) if syntax error, t_token and t_argv are freed
 		free(line);
 	}
 	rl_clear_history();
