@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 17:44:35 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 16:00:04 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,15 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 	t_argv	*head;
 
 	*out = NULL;
-	token = lexer(line);
-	if (!token)
+	if (!line[0])
+		return (free (line), -1);
+	token = lexer(line, env);
+	if (!token && env->exit_s == 42)
+		return (free_tokens(token), free (line), env->exit_s = 0, -1);
+	if (!token && env->exit_s != 42)
 	{
-		env->exit_s = 1;
-		return (0);
+		env->exit_s = ENOMEM;
+		return (free_tokens(token), perror("malloc"), 0);
 	}
 	if (syntax_error(line, token, env))
 		return (0);

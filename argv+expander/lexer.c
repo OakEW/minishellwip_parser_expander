@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 17:11:33 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 15:41:51 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	precheck_line(char *line)
 	return (0);
 }
 
-t_token	*lexer(char	*line)
+t_token	*lexer(char	*line, t_env *env)
 {
 	int				i;
 	int				n;
@@ -99,12 +99,14 @@ t_token	*lexer(char	*line)
 	{
 		while (line[i] && line[i] <= 32)
 			i++;
-		if (line[i] == 0)
+		if (!head && !line[i])
+			return (env->exit_s = 42, NULL);
+		if (head && !line[i])
 			break ;
 		type = is_operator(&line[i]);
 		n = link_token(&head, &current, type, &line[i]);
 		if (n < 0)
-			return (free_tokens(head), NULL);
+			return (free_tokens(head), env->exit_s = ENOMEM, NULL);
 		i += n;
 	}
 	return (head);

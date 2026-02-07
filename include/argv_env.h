@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 18:00:29 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 16:11:46 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*token_strndup(const char *s, int n);
 t_token	*make_token(char *str, t_token_type type);
 int		link_token(t_token **h, t_token **cur, t_token_type t, char *s);
 int		precheck_line(char *line);
-t_token	*lexer(char	*line);
+t_token	*lexer(char	*line, t_env *env);
 
 //init_env.c
 size_t	ft_strlen(const char *str);
@@ -143,4 +143,8 @@ void	free_strstr(char **s);
 void	free_env(t_env *env);
 void	free_tokens(t_token *head);
 void	free_argv(t_argv *head);
+
+//sort_strs.c
+int		ft_strcmp(char *s1, char *s2);
+void	sort_entry(char **entry);
 #endif

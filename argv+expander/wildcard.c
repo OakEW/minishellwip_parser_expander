@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 15:33:24 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 16:10:25 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	wildcards(t_argv *curt, t_env *env)
 	entry = get_entry(env);
 	if (!entry)
 		return (0);
+	sort_entry(entry);
 	while (curt->argv[i])
 	{
 		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)

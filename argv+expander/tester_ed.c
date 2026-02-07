@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 15:49:08 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 16:00:10 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_argv	*head;
 	t_env	*env;
+	int		i;
 
 	env = init_env(envp);
 	if (!env)
@@ -65,7 +66,10 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (*line)
 			add_history(line);
-		if (build_argv(line, env, &head))
+		i = build_argv(line, env, &head);
+		if (i == -1)
+			continue ;
+		if (i == 1)
 		{
 			print_argv(head, env);
 			env->exit_s = 0;
