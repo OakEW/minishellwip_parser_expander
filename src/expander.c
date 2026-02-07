@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 18:00:41 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:27:24 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*var_join(char **str, char *add, int pos, int len)
 	return (join);
 }
 
-char	*replace_var_helper(char **str, char *add, int i, t_env *env)
+char	*replace_var_helper(char **str, int i, t_env *env)
 {
 	char	*exit_s;
 	char	*new;
@@ -80,14 +80,13 @@ char	*replace_var_helper(char **str, char *add, int i, t_env *env)
 
 int	replace_var(char **str, char *add, int i, t_env *env)
 {
-	char	*exit_s;
 	char	*new;
 	int		len;
 	int		subtract;
 
 	if ((*str)[i] == '?')
 	{
-		new = replace_var_helper(str, add, i, env);
+		new = replace_var_helper(str, i, env);
 		if (!new)
 			return (0);
 	}
@@ -126,7 +125,7 @@ int	expander(char **str, t_env *env)
 			else
 				var = find_var(&(*str)[i[0]], env);
 			if (!replace_var(str, var, i[0], env))
-				return (perror("malloc"), env->exit_s = ENOMEM, 0);
+				return (malloc_fail(env), 0);
 			i[0] -= 2;
 		}
 		i[0]++;

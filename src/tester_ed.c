@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 16:00:10 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:28:21 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	int		i;
 
+	(void)argc;
+	(void)argv;
 	env = init_env(envp);
 	if (!env)
 		return (0);

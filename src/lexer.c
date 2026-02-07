@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 15:41:51 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:31:40 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_token	*make_token(char *str, t_token_type type)
 	if (type > 7)
 		len = 2;
 	else if (type <= 2)
-		len = token_len(str, type);
+		len = token_len(str);
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
@@ -52,7 +52,7 @@ int	link_token(t_token **head, t_token **current, t_token_type type, char *str)
 		return (1);
 	else if (type > 7)
 		return (2);
-	return (token_len(str, type));
+	return (token_len(str));
 }
 
 int	precheck_line(char *line)

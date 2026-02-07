@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 16:00:04 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:30:26 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	make_argv_helper(t_argv **head, t_argv **curt, t_token **t, int *flag)
 	return (1);
 }
 
-t_argv	*make_argv(t_token *token, t_env*env)
+t_argv	*make_argv(t_token *token)
 {
 	t_argv	*current;
 	t_argv	*head;
@@ -70,18 +70,12 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 	if (!token && env->exit_s == 42)
 		return (free_tokens(token), free (line), env->exit_s = 0, -1);
 	if (!token && env->exit_s != 42)
-	{
-		env->exit_s = ENOMEM;
-		return (free_tokens(token), perror("malloc"), 0);
-	}
+		return (free_tokens(token), malloc_fail(env), 0);
 	if (syntax_error(line, token, env))
 		return (0);
-	head = make_argv(token, env);
+	head = make_argv(token);
 	if (!head)
-	{
-		env->exit_s = ENOMEM;
-		return (free_tokens(token), perror("malloc"), 0);
-	}
+		return (free_tokens(token), malloc_fail(env), 0);
 	*out = head;
 	free_tokens(token);
 	return (1);

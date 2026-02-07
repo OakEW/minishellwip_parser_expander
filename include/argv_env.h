@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 16:11:46 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:32:49 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 # include <dirent.h>
 # include <errno.h>
 
-# define RED     "\033[31m"
-# define GREEN   "\033[32m"
-# define YELLOW  "\033[33m"
-# define BLUE    "\033[34m"
-# define MAGENTA "\033[35m"
-# define CYAN    "\033[36m"
-# define WHITE   "\033[37m"
-# define RESET   "\033[0m"
+# define RED		"\033[31m"
+# define GREEN		"\033[32m"
+# define YELLOW		"\033[33m"
+# define BLUE		"\033[34m"
+# define MAGENTA	"\033[35m"
+# define CYAN		"\033[36m"
+# define WHITE		"\033[37m"
+# define RESET		"\033[0m"
 
 typedef enum e_token_type
 {
@@ -81,7 +81,7 @@ typedef struct s_env
 
 //lexer.c
 int		is_operator(char *str);
-int		token_len(char *str, t_token_type type);
+int		token_len(char *str);
 char	*token_strndup(const char *s, int n);
 
 //lexer_helper.c
@@ -93,7 +93,7 @@ t_token	*lexer(char	*line, t_env *env);
 //init_env.c
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *s);
-t_env 	*init_env(char **envp);
+t_env	*init_env(char **envp);
 
 //syntax_check.c
 int		o_p(t_token_type x);
@@ -107,13 +107,13 @@ int		make_str(t_argv *argv, t_token *token);
 
 //parser.c
 int		make_argv_helper(t_argv **h, t_argv **curt, t_token **t, int *f);
-t_argv	*make_argv(t_token *token, t_env*env);
+t_argv	*make_argv(t_token *token);
 int		build_argv(char *line, t_env *env, t_argv **out);
 
 //wildcard.c
 int		entry_len(t_env *env);
 char	**get_entry(t_env *env);
-char	**join_wild_helper(t_argv *curt, char **entry, t_env *env);
+char	**join_wild_helper(t_argv *curt, char **entry);
 int		join_wild(t_argv *curt, int pos, char **entry, t_env *env);
 int		wildcards(t_argv *curt, t_env *env);
 
@@ -127,11 +127,11 @@ int		check_q(char c, int *q_s, int *q_d);
 void	int_init(int *i);
 
 //expander.c
-char	*find_var(char *str, t_env* env);
+char	*find_var(char *str, t_env *env);
 char	*var_join(char **str, char *add, int pos, int len);
-char	*replace_var_helper(char **str, char *add, int i, t_env *env);
+char	*replace_var_helper(char **str, int i, t_env *env);
 int		replace_var(char **str, char *add, int i, t_env *env);
-int		expander(char **str, t_env* env);
+int		expander(char **str, t_env *env);
 
 //trimmer.c
 int		rm_empty(t_argv *curt, int i);
@@ -143,8 +143,10 @@ void	free_strstr(char **s);
 void	free_env(t_env *env);
 void	free_tokens(t_token *head);
 void	free_argv(t_argv *head);
+void	malloc_fail(t_env *env);
 
 //sort_strs.c
 int		ft_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
+
 #endif

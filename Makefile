@@ -1,90 +1,36 @@
-SHELL=			zsh
-CC=				cc
-CFLAGS=			-Wall -Wextra -g -O0 
-RM=				rm -f
+NAME= minishell
 
-NAME=			minishell
-BIN_DIR=		bin/
-NAME:=			${addprefix ${BIN_DIR}, ${NAME}}
+SRC_DIR= src/
+OBJ_DIR= obj/
+INC= include/
 
-SRC=			main.c															\
-				cmd.c															\
-				tester.c														\
-				bt_print.c														\
-				exec.c															\
-				get_cmd.c														\												\
-				error_utils.c													\
-				file_utils.c													\
-				lexer.c															\
-				lexer_helper.c													\
-				wildcard.c														\
-				init_env.c														\
-				parser.c														\
-				parser_helper.c													\
-				syntax_check.c													\
-				expander.c														\
-				expander_helper.c												\
-				trimmer.c														\
-				helper_itoa.c													\
-				helper_free.c													\
-				sort_strs.c
+SRC= tester_ed.c lexer.c lexer_helper.c wildcard.c init_env.c parser.c \
+	 parser_helper.c syntax_check.c expander.c expander_helper.c \
+	 trimmer.c helper_itoa.c helper_free.c sort_strs.c
 
-SRC_DIR=		src/
+OBJ= ${addprefix ${OBJ_DIR}, ${SRC:.c=.o}}
 
-OBJ=			${SRC:.c=.o}
-OBJ_DIR=		build/
-OBJ:=			${addprefix ${OBJ_DIR}, ${OBJ}}
+LIB= -lreadline
 
-INC=			include/
+all: ${NAME}
 
-LIBFT=			lib/libft.a
-LIB_DIR=		lib/
+${NAME}: ${OBJ}
+	@echo "[${NAME}] Compiling $@"
+	@cc -Wall -Wextra -g -O0 -I${INC} -o $@ $^ ${LIB}
 
-ECHO_PRINT=		[\033[0;35m${NAME}\033[0m]
+${OBJ_DIR}:
+	mkdir -p ${OBJ_DIR}
 
-LIB=			-Llib -lft -lreadline
-
-all:			${NAME} bin/exiter
-
-bin/exiter:
-				@echo "${ECHO_PRINT} [\033[0;32mCompiling\033[0m] $@"
-				@${CC} ${CFLAGS} -I${INC} -o bin/exiter src/exiter.c ${LIB}
-
-${NAME}:		${BIN_DIR} ${OBJ_DIR} ${LIB_DIR} ${LIBFT} ${OBJ} | ${OBJ_DIR}.
-				@echo "${ECHO_PRINT} [\033[0;32mCompiling\033[0m] $@"
-				@${CC} ${CFLAGS} -I${INC} -o ${NAME} ${OBJ} ${LIB}
-
-%/:
-				@echo "${ECHO_PRINT} [\033[0;32mCreating Directory\033[0m] $@"
-				@mkdir -p $@
-
-${LIBFT}:
-				@make -s -j 12 -C libft
-				@cp libft/bin/libft.a ${LIBFT}
-
-bonus:			all
+${OBJ_DIR}%.o: ${SRC_DIR}%.c | ${OBJ_DIR}
+	@echo "[${NAME}] Compiling $@"
+	@cc -Wall -Wextra -g -O0 -I${INC} -c $< -o $@
 
 clean:
-				@echo "${ECHO_PRINT} [\033[0;32mRemoving\033[0m] ${OBJ}"
-				@${RM} ${OBJ}
-				@make -s -j 12 -C libft clean
+	rm -f ${OBJ}
 
-fclean:
-				@echo "${ECHO_PRINT} [\033[0;32mRemoving\033[0m] ${NAME}"
-				@echo "${ECHO_PRINT} [\033[0;32mRemoving\033[0m] ${LIBFT}"
-				@echo "${ECHO_PRINT} [\033[0;32mRemoving\033[0m] ${OBJ}"
-				@${RM} ${NAME}
-				@${RM} ${LIBFT}
-				@${RM} ${OBJ}
-				@make -s -j 12 -C libft fclean
+fclean: clean
+	rm -f ${NAME}
 
-re:				fclean all
+re: fclean all
 
-%.o:			../${SRC_DIR}%.c
-				@echo "${ECHO_PRINT} [\033[0;32mCompiling\033[0m] $@"
-				@${CC} ${CFLAGS} -I${INC} -c -o $@ $<
-
-gitadd:			fclean
-				git add src include Makefile libft/src libft/include libft/Makefile minilibx-linux
-
-.PHONY:			all bonus clean fclean re gitadd
+.PHONY: all clean fclean re

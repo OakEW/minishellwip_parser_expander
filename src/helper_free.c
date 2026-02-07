@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 16:38:24 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 16:47:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,10 @@ void	free_argv(t_argv *head)
 		}
 		free(tmp);
 	}
+}
+
+void	malloc_fail(t_env *env)
+{
+	env->exit_s = ENOMEM;
+	write (2, RED"Malloc failed\n"RESET, 23);
 }

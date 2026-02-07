@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 16:10:25 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/07 17:29:41 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**get_entry(t_env *env)
 		return (NULL);
 	stash = malloc(sizeof(char *) * (i + 1));
 	if (!stash)
-		return (perror("malloc"), env->exit_s = ENOMEM, NULL);
+		return (malloc_fail(env), NULL);
 	cwd = opendir(".");
 	if (cwd == NULL)
 		return (perror("opendir"), env->exit_s = errno, NULL);
@@ -62,7 +62,7 @@ char	**get_entry(t_env *env)
 	return (stash);
 }
 
-char	**join_wild_helper(t_argv *curt, char **entry, t_env *env)
+char	**join_wild_helper(t_argv *curt, char **entry)
 {
 	char	**new;
 	int		len;
@@ -85,9 +85,9 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 
 	i = 0;
 	x = 0;
-	new = join_wild_helper(curt, entry, env);
+	new = join_wild_helper(curt, entry);
 	if (!new)
-		return (perror("malloc"), env->exit_s = ENOMEM, 0);
+		return (malloc_fail(env), 0);
 	while (i < pos)
 		new[i++] = ft_strdup(curt->argv[x++]);
 	x++;
