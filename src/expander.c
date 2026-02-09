@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:31:08 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:55:03 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,6 @@ int	replace_var(char **str, char *add, int i, t_env *env)
 	}
 	free(*str);
 	*str = new;
-	return (1);
-}
-int	rm_char(char **str, int pos)
-{
-	int		i;
-
-	i = pos;
-	while ((*str)[i])
-	{
-		(*str)[i] = (*str)[i + 1];
-		i++;
-	}
 	return (1);
 }
 

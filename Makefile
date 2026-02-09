@@ -4,7 +4,7 @@ SRC_DIR= src/
 OBJ_DIR= obj/
 INC= include/
 
-SRC= tester_ed.c lexer.c lexer_helper.c wildcard.c init_env.c parser.c \
+SRC= tester_ed.c lexer.c lexer_helper.c wildcard.c wildcard_entry.c init_env.c parser.c \
 	 parser_helper.c syntax_check.c expander.c expander_helper.c \
 	 trimmer.c helper_itoa.c helper_free.c sort_strs.c
 

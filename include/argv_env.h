@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 12:20:06 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 15:00:35 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,15 @@ int		make_argv_helper(t_argv **h, t_argv **curt, t_token **t, int *f);
 t_argv	*make_argv(t_token *token);
 int		build_argv(char *line, t_env *env, t_argv **out);
 
-//wildcard.c
+//wildcard_entry.c
 int		entry_len(t_env *env);
 char	**get_entry(t_env *env);
+
+//wildcard.c
 char	**join_wild_helper(t_argv *curt, char **entry);
 int		join_wild(t_argv *curt, int pos, char **entry, t_env *env);
 int		wildcards(t_argv *curt, t_env *env);
+int		check_wildcard(t_argv *curt, t_env *env);
 
 //helper_itoa.c
 int		is_al(char c);
@@ -125,6 +128,7 @@ char	*ft_itoa(int n);
 //expander_helper.c
 int		check_q(char c, int *q_s, int *q_d);
 void	int_init(int *i);
+int		rm_char(char **str, int pos);
 
 //expander.c
 char	*find_var(char *str, t_env *env);
@@ -136,6 +140,7 @@ int		expander(char **str, t_env *env);
 //trimmer.c
 int		rm_empty(t_argv *curt, int i);
 void	trim_q(char *s);
+int		expand_home(t_argv *curt, t_env *env);
 int		trim_expand(t_argv *curt, t_env *env);
 
 //helper_free.c
