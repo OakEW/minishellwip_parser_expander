@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:15:34 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:41:18 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		i = build_argv(line, env, &head);	//init t_argv (do lexer then parser + syntax check)
-		if (i == -1)						//return (-1)when line is empty, line is freed
+		if (i == -1)						//return (-1) when line is empty, line is freed
 			continue ;
 		if (i == 1)							//return (1) on success, t_token is freed
 		{
 			if (print_argv(head, env))		// expand and trim qoutes in "child"
 				env->exit_s = 0;
 			free_argv(head);
-		}									//return (0) if syntax error, t_token and t_argv are freed
+		}								//return (0) if syntax error, t_token and t_argv are freed
 		free(line);
 	}
 	rl_clear_history();

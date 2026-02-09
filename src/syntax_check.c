@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:02 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 17:41:41 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:50:37 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	syntax_error(char *line, t_token *token, t_env *env)
 	if (x != 0)
 	{
 		env->exit_s = 2;
-		free_tokens(token);
 		printf (RED"syntax error near unexpected token `%c'\n"RESET, (char)x);
 		return (2);
 	}

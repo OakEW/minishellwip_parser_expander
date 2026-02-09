@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:18:33 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:31:08 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,23 +106,14 @@ int	replace_var(char **str, char *add, int i, t_env *env)
 }
 int	rm_char(char **str, int pos)
 {
-	char	*new;
 	int		i;
 
-	i = 0;
-	new = malloc(sizeof(char) * ft_strlen(*str));
-	if (!new)
-		return (0);
+	i = pos;
 	while ((*str)[i])
 	{
-		if (i < pos)
-			new[i] = (*str)[i];
-		else
-			new[i] = (*str)[i + 1];
+		(*str)[i] = (*str)[i + 1];
 		i++;
 	}
-	free (*str);
-	*str = new;
 	return (1);
 }
 
