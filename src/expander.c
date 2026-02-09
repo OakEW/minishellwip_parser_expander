@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:27:24 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:18:33 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,27 @@ int	replace_var(char **str, char *add, int i, t_env *env)
 	*str = new;
 	return (1);
 }
+int	rm_char(char **str, int pos)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = malloc(sizeof(char) * ft_strlen(*str));
+	if (!new)
+		return (0);
+	while ((*str)[i])
+	{
+		if (i < pos)
+			new[i] = (*str)[i];
+		else
+			new[i] = (*str)[i + 1];
+		i++;
+	}
+	free (*str);
+	*str = new;
+	return (1);
+}
 
 int	expander(char **str, t_env *env)
 {
@@ -116,6 +137,13 @@ int	expander(char **str, t_env *env)
 		if (check_q((*str)[i[0]], &i[1], &i[2]))
 		{
 			i[0]++;
+			if ((*str)[i[0]] == '\'' || (*str)[i[0]] == '\"')
+			{
+				if (!rm_char(str, i[0] - 1))
+					return (malloc_fail(env), 0);
+				i[0]++;
+				continue ;
+			}
 			if ((*str)[i[0]] == 0)
 				break ;
 			if ((*str)[i[0]] == '?')

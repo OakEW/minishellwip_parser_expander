@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:18 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 20:53:22 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:05:41 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,55 @@ void	trim_q(char *s)
 	s[n] = 0;
 }
 
+int	check_wildcard(t_argv *curt, t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (curt->argv[i])
+	{
+		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
+		{
+			if (!wildcards(curt, env))
+				return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	expand_home(t_argv *curt, t_env *env)
+{
+	int		i;
+	char	*home;
+	char	*tmp;
+
+	i = 0;
+	home = find_var("HOME", env);
+	while (curt->argv[i])
+	{
+		if (curt->argv[i][0] == '~' && curt->argv[i][1]== 0)
+		{
+			tmp = ft_strdup(home);
+			if (!tmp)
+				return (0);
+			free (curt->argv[i]);
+			curt->argv[i] = tmp;
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	trim_expand(t_argv *curt, t_env *env)
 {
 	int	i;
 	int	flag;
 
 	i = 0;
-	if (!wildcards(curt, env))
+	if (!check_wildcard(curt, env))
+		return (0);
+	if (!expand_home(curt, env))
 		return (0);
 	while (curt->argv[i])
 	{

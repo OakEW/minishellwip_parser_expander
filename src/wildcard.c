@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 21:00:14 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 14:20:47 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	entry_len(t_env *env)
 	i = 0;
 	cwd = opendir(".");
 	if (cwd == NULL)
-		return (perror("opendir"), env->exit_s = errno, 0);
+		return (perror("opendir"), env->exit_s = errno, -1);
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
@@ -41,7 +41,7 @@ char	**get_entry(t_env *env)
 	int				i;
 
 	i = entry_len(env);
-	if (!i)
+	if (i < 0)
 		return (NULL);
 	stash = malloc(sizeof(char *) * (i + 1));
 	if (!stash)
@@ -56,8 +56,8 @@ char	**get_entry(t_env *env)
 		if (entry->d_name[0] != '.')
 		{
 			stash[i] = ft_strdup(entry->d_name);
-			if (!stash)
-				return (malloc_fail(env), free_strstr(stash), NULL);
+			if (!stash[i])
+				return (malloc_fail(env), free_strstr(stash), closedir(cwd), NULL);
 			i++;
 		}
 		entry = readdir(cwd);
@@ -87,9 +87,11 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 	char	**new;
 	int		x;
 	int		i;
+	int		j;
 
 	i = 0;
 	x = 0;
+	j = 0;
 	new = join_wild_helper(curt, entry);
 	if (!new)
 		return (malloc_fail(env), 0);
@@ -102,13 +104,13 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 		i++;
 	}
 	x++;
-	while (*entry)
+	while (entry[j])
 	{
-		new[i] = ft_strdup(*entry);
+		new[i] = ft_strdup(entry[j]);
 		if (!new[i])
 			return (malloc_fail(env), free_strstr(new), 0);
 		i++;
-		entry++;
+		j++;
 	}
 	while (curt->argv[x])
 	{
@@ -141,7 +143,7 @@ int	wildcards(t_argv *curt, t_env *env)
 		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
 		{		
 			if (!join_wild(curt, i, entry, env))
-				return (0);
+				return (free_strstr(entry), 0);
 			i = 0;
 		}
 		i++;
