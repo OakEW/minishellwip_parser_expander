@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 15:49:11 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 16:02:40 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,12 +121,6 @@ int		join_wild(t_argv *curt, int pos, char **entry);
 int		wildcards(t_argv *curt, t_env *env);
 int		check_wildcard(t_argv *curt, t_env *env);
 
-//expander_helper_rm_char.c
-int		check_q(char c, int *q_s, int *q_d);
-void	int_init(int *i);
-void	rm_char_helper(char **str);
-void	rm_char(t_argv *curt);
-
 //expander_helper_var.c
 char	*find_var(char *str, t_env *env);
 char	*var_join(char **str, char *add, int pos, int len);
@@ -138,6 +132,12 @@ int		expand_home(t_argv *curt, t_env *env);
 int		expander_helper(char **str, t_env *env);
 int		expander(t_argv *curt, t_env *env);
 int		expand_all(t_argv *curt, t_env *env);
+
+//rm_char.c
+int		check_q(char c, int *q_s, int *q_d);
+void	int_init(int *i);
+void	rm_char_helper(char **str);
+void	rm_char(t_argv *curt);
 
 //trimmer.c
 void	trim_q(char **s);

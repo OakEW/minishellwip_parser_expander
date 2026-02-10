@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 15:33:07 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 16:15:06 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	print_argv(t_argv *head, t_env *env)
 	{
 		i = 0;
 		if(expand_all(tmp, env))	//expander($ and *) and trim off outer qoutes
-			return (free_argv(head), free_env(env), exit (1), 0); // malloc fail exit (1)
+			return (free_argv(head), free_env(env), exit (1), 0); // retrun (> 0) on malloc fail, exit (1)
 		while (i < tmp->argc)
 		{
 			printf(BLUE "t_argv[%d] type:%d", x, tmp->type);
@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		i = build_argv(line, &env, &head);	//init t_argv (do lexer then parser + syntax check)
-		if (i == -1)						//return (-1) when line is empty, or syntax error . line & t_token are freed. msg written, exit (1)
+		if (i == -1)						//return (-1) when line is empty, or syntax error. line & t_token are freed. msg written, exit (1)
 			continue ;
 		if (i == 1)							//return (1) on success, line & t_token are freed
 		{
