@@ -6,13 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 10:20:08 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 11:49:50 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-int	print_argv(t_argv *head, t_env *env, char *line)
+int	print_argv(t_argv *head, t_env *env)
 {
 	t_argv	*tmp;
 	int		x;
@@ -24,7 +24,7 @@ int	print_argv(t_argv *head, t_env *env, char *line)
 	{
 		i = 0;
 		if(!trim_expand(tmp, env))	//expander($ and *) and trim off outer qoutes
-				return (free_argv(head), free_env(env), free(line), malloc_fail(env), 0); // malloc fail, msg written, exit (1)
+			return (free_argv(head), free_env(env), malloc_fail(env), 0); // malloc fail, msg written, exit (1)
 		while (i < tmp->argc)
 		{
 			printf(BLUE "t_argv[%d] type:%d", x, tmp->type);
@@ -69,15 +69,14 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		i = build_argv(line, &env, &head);	//init t_argv (do lexer then parser + syntax check)
-		if (i == -1)						//return (-1) when line is empty, or syntax error . line is freed. msg written, exit (1)
+		if (i == -1)						//return (-1) when line is empty, or syntax error . line & t_token are freed. msg written, exit (1)
 			continue ;
-		if (i == 1)							//return (1) on success, t_token is freed
+		if (i == 1)							//return (1) on success, line & t_token are freed
 		{
-			if (print_argv(head, &env, line))		// expand and trim qoutes in "child"
+			if (print_argv(head, &env))		// expand and trim qoutes in "child"
 			{
 				(&env)->exit_s = 0;
 				free_argv(head);
-				free(line);
 			}
 		}								//return (0) if syntax error, t_token and t_argv are freed. msg written, exit (1)
 	}
