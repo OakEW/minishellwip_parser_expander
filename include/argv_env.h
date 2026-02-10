@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 16:02:40 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 17:14:21 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ int		make_str(t_argv *argv, t_token *token);
 //parser.c
 int		make_argv_helper(t_argv **h, t_argv **curt, t_token **t, int *f);
 t_argv	*make_argv(t_token *token);
-int		build_argv(char *line, t_env *env, t_argv **out);
+int		build_argv(char *line, t_env *env, t_argv **out);		//lexer->snytax->parser, build t_argv. line and t_token are freed from here
+																//return (-1) on syntax error or line is empty 
+																//return (0) on malloc fails. return (1) on sucess
 
 //wildcard_entry.c
 int		entry_len(t_env *env);
@@ -119,7 +121,7 @@ char	**get_entry(t_env *env);
 char	**join_wild_helper(t_argv *curt, char **entry);
 int		join_wild(t_argv *curt, int pos, char **entry);
 int		wildcards(t_argv *curt, t_env *env);
-int		check_wildcard(t_argv *curt, t_env *env);
+int		check_wildcard(t_argv *curt, t_env *env);				//expand wildcard *
 
 //expander_helper_var.c
 char	*find_var(char *str, t_env *env);
@@ -128,22 +130,24 @@ char	*replace_var_helper(char **str, int i, t_env *env);
 int		replace_var(char **str, char *add, int i, t_env *env);
 
 //expander.c
-int		expand_home(t_argv *curt, t_env *env);
+int		expand_home(t_argv *curt, t_env *env);					//expand ~ to HOME
 int		expander_helper(char **str, t_env *env);
-int		expander(t_argv *curt, t_env *env);
-int		expand_all(t_argv *curt, t_env *env);
+int		expander(t_argv *curt, t_env *env);						//expand $ENV
+int		expand_all(t_argv *curt, t_env *env);		//do check_wildcard -> expand_home -> rm_char -> expander -> trim_empty -> trim_quote; 
+													//return (>0) on malloc fails. return (0) on success
 
 //rm_char.c
 int		check_q(char c, int *q_s, int *q_d);
 void	int_init(int *i);
 void	rm_char_helper(char **str);
-void	rm_char(t_argv *curt);
+void	rm_char(t_argv *curt);									//remove $ when $" || $'
 
 //trimmer.c
 void	trim_q(char **s);
-void	trim_quote(t_argv *curt);
+void	trim_quote(t_argv *curt);								//remove outer "" || ''
 int		rm_empty(t_argv *curt, int i);
-int		trim_empty(t_argv *curt);
+int		trim_empty(t_argv *curt);								//trim off empty strstr from t_argv->argv after expand $ENV. 
+																//if node becomes empty after expand t_argv->argc = 0 and t_argv->argv = NULL
 
 //helper_itoa.c
 int		is_al(char c);
@@ -162,3 +166,43 @@ int		ft_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
 
 #endif
+
+/*
+
+...
+int	i;
+if (*line)
+	add_history(line);
+	i = build_argv(line, &env, &head);	//init t_argv (do lexer syntax check then parser)
+	if (i == -1)						//return (-1) when line is empty || syntax error. line & t_token are freed
+		continue ;
+	if (i == 1)							//return (1) on success, line & t_token are freed already
+		do_something;
+...
+____________________
+
+int	expand_all(t_argv *curt, t_env *env)
+{
+	int	i;
+
+	i = 0;
+	if (curt->type > 2)
+		return (0);
+	if (!check_wildcard(curt, env))
+		return (1);
+	if (!expand_home(curt, env))
+		return (2);
+	rm_char(curt);
+	if (!expander(curt, env))
+		return (3);
+	if (!trim_empty(curt))
+		return (4);
+	trim_quote(curt);
+	return (0);
+}
+...
+	if(expand_all(tmp, env))											//expander($ ~ *) and trim off outer qoutes
+		return (free_argv(head), free_env(env), exit (1), 0); 			//retrun (> 0) on malloc fail, exit (1)
+...
+
+*/
