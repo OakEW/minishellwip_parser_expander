@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 11:26:24 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 15:49:11 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,23 +80,23 @@ typedef struct s_env
 	int		exit_s;
 }	t_env;
 
-//lexer.c
-int		is_operator(char *str);
-int		token_len(char *str);
-char	*token_strndup(const char *s, int n);
-
-//lexer_helper.c
-t_token	*make_token(char *str, t_token_type type);
-int		link_token(t_token **h, t_token **cur, t_token_type t, char *s);
-int		precheck_line(char *line);
-t_token	*lexer(char	*line, t_env *env);
-
 //init_env.c
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *s);
 int		init_env(t_env *env, char **envp);
 
+//lexer_helper.c
+int		is_operator(char *str);
+int		token_len(char *str);
+char	*token_strndup(const char *s, int n);
+
+//lexer.c
+t_token	*make_token(char *str, t_token_type type);
+int		link_token(t_token **h, t_token **cur, t_token_type t, char *s);
+t_token	*lexer(char	*line, t_env *env);
+
 //syntax_check.c
+int		precheck_line(char *line);
 int		o_p(t_token_type x);
 char	*syntax_check(t_token *token);
 int		syntax_error(char *line, t_token *token, t_env *env);
@@ -117,32 +117,38 @@ char	**get_entry(t_env *env);
 
 //wildcard.c
 char	**join_wild_helper(t_argv *curt, char **entry);
-int		join_wild(t_argv *curt, int pos, char **entry, t_env *env);
+int		join_wild(t_argv *curt, int pos, char **entry);
 int		wildcards(t_argv *curt, t_env *env);
 int		check_wildcard(t_argv *curt, t_env *env);
+
+//expander_helper_rm_char.c
+int		check_q(char c, int *q_s, int *q_d);
+void	int_init(int *i);
+void	rm_char_helper(char **str);
+void	rm_char(t_argv *curt);
+
+//expander_helper_var.c
+char	*find_var(char *str, t_env *env);
+char	*var_join(char **str, char *add, int pos, int len);
+char	*replace_var_helper(char **str, int i, t_env *env);
+int		replace_var(char **str, char *add, int i, t_env *env);
+
+//expander.c
+int		expand_home(t_argv *curt, t_env *env);
+int		expander_helper(char **str, t_env *env);
+int		expander(t_argv *curt, t_env *env);
+int		expand_all(t_argv *curt, t_env *env);
+
+//trimmer.c
+void	trim_q(char **s);
+void	trim_quote(t_argv *curt);
+int		rm_empty(t_argv *curt, int i);
+int		trim_empty(t_argv *curt);
 
 //helper_itoa.c
 int		is_al(char c);
 int		get_len(int n);
 char	*ft_itoa(int n);
-
-//expander_helper.c
-int		check_q(char c, int *q_s, int *q_d);
-void	int_init(int *i);
-void	rm_char(char **str);
-
-//expander.c
-char	*find_var(char *str, t_env *env);
-char	*var_join(char **str, char *add, int pos, int len);
-char	*replace_var_helper(char **str, int i, t_env *env);
-int		replace_var(char **str, char *add, int i, t_env *env);
-int		expander(char **str, t_env *env);
-
-//trimmer.c
-int		rm_empty(t_argv *curt, int i);
-void	trim_q(char *s);
-int		expand_home(t_argv *curt, t_env *env);
-int		trim_expand(t_argv *curt, t_env *env);
 
 //helper_free.c
 void	free_strstr(char **s);

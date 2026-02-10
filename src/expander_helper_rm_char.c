@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 11:26:34 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 14:54:19 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	int_init(int *i)
 	i[2] = 0;
 }
 
-void	rm_char(char **str)
+void	rm_char_helper(char **str)
 {
 	int		i[3];
 	int		pos;
@@ -54,5 +54,17 @@ void	rm_char(char **str)
 			}
 		}
 		i[0]++;
+	}
+}
+
+void	rm_char(t_argv *curt)
+{
+	int	i;
+
+	i = 0;
+	while (i < curt->argc)
+	{
+		rm_char_helper(&(curt->argv[i]));
+		i++;
 	}
 }

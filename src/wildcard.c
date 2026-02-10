@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 15:00:08 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 14:20:20 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	**join_wild_helper(t_argv *curt, char **entry)
 	return (new);
 }
 
-int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
+int	join_wild(t_argv *curt, int pos, char **entry)
 {
 	char	**new;
 	int		x;
@@ -39,12 +39,12 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 	j = 0;
 	new = join_wild_helper(curt, entry);
 	if (!new)
-		return (malloc_fail(env), 0);
+		return (0);
 	while (i < pos)
 	{
 		new[i] = ft_strdup(curt->argv[x]);
 		if (!new[i])
-			return (malloc_fail(env), free_strstr(new), 0);
+			return (free_strstr(new), 0);
 		x++;
 		i++;
 	}
@@ -53,7 +53,7 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 	{
 		new[i] = ft_strdup(entry[j]);
 		if (!new[i])
-			return (malloc_fail(env), free_strstr(new), 0);
+			return (free_strstr(new), 0);
 		i++;
 		j++;
 	}
@@ -61,7 +61,7 @@ int	join_wild(t_argv *curt, int pos, char **entry, t_env *env)
 	{
 		new[i] = ft_strdup(curt->argv[x]);
 		if (!new[i])
-			return (malloc_fail(env), free_strstr(new), 0);
+			return (free_strstr(new), 0);
 		i++;
 		x++;
 	}
@@ -87,7 +87,7 @@ int	wildcards(t_argv *curt, t_env *env)
 	{
 		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
 		{		
-			if (!join_wild(curt, i, entry, env))
+			if (!join_wild(curt, i, entry))
 				return (free_strstr(entry), 0);
 			i = 0;
 		}

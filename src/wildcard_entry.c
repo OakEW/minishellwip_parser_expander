@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:58:53 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 12:30:26 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ char	**get_entry(t_env *env)
 		return (NULL);
 	stash = malloc(sizeof(char *) * (i + 1));
 	if (!stash)
-		return (malloc_fail(env), NULL);
+		return (NULL);
 	cwd = opendir(".");
 	if (cwd == NULL)
-		return (perror("opendir"), env->exit_s = errno, NULL);
+		return (perror("opendir"), free_strstr(stash), env->exit_s = errno, NULL);
 	i = 0;
 	entry = readdir(cwd);
 	while (entry != NULL)
@@ -57,7 +57,7 @@ char	**get_entry(t_env *env)
 		{
 			stash[i] = ft_strdup(entry->d_name);
 			if (!stash[i])
-				return (malloc_fail(env), free_strstr(stash), closedir(cwd), NULL);
+				return (free_strstr(stash), closedir(cwd), NULL);
 			i++;
 		}
 		entry = readdir(cwd);

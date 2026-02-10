@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/07 17:31:40 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 15:45:27 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,35 +55,6 @@ int	link_token(t_token **head, t_token **current, t_token_type type, char *str)
 	return (token_len(str));
 }
 
-int	precheck_line(char *line)
-{
-	int	parent;
-	int	single_q;
-	int	double_q;
-
-	parent = 0;
-	single_q = 0;
-	double_q = 0;
-	while (*line)
-	{
-		if (*line == '\'' && double_q == 0)
-			single_q = !single_q;
-		else if (*line == '\"' && single_q == 0)
-			double_q = !double_q;
-		else if (*line == '(' && !single_q && !double_q)
-			parent++;
-		else if (*line == ')' && !single_q && !double_q)
-		{
-			if (parent-- <= 0)
-				return (258);
-		}
-		line++;
-	}
-	if (parent != 0 || single_q || double_q)
-		return (258);
-	return (0);
-}
-
 t_token	*lexer(char	*line, t_env *env)
 {
 	int				i;
@@ -106,7 +77,7 @@ t_token	*lexer(char	*line, t_env *env)
 		type = is_operator(&line[i]);
 		n = link_token(&head, &current, type, &line[i]);
 		if (n < 0)
-			return (free_tokens(head), env->exit_s = ENOMEM, NULL);
+			return (free_tokens(head), env->exit_s = 1, NULL);
 		i += n;
 	}
 	return (head);

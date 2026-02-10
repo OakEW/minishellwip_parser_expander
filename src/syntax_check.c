@@ -6,11 +6,40 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:02 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 17:40:24 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 15:45:37 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
+
+int	precheck_line(char *line)
+{
+	int	parent;
+	int	single_q;
+	int	double_q;
+
+	parent = 0;
+	single_q = 0;
+	double_q = 0;
+	while (*line)
+	{
+		if (*line == '\'' && double_q == 0)
+			single_q = !single_q;
+		else if (*line == '\"' && single_q == 0)
+			double_q = !double_q;
+		else if (*line == '(' && !single_q && !double_q)
+			parent++;
+		else if (*line == ')' && !single_q && !double_q)
+		{
+			if (parent-- <= 0)
+				return (258);
+		}
+		line++;
+	}
+	if (parent != 0 || single_q || double_q)
+		return (258);
+	return (0);
+}
 
 int	o_p(t_token_type x)
 {
