@@ -6,13 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:14 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:41:18 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 10:20:08 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-int	print_argv(t_argv *head, t_env *env)
+int	print_argv(t_argv *head, t_env *env, char *line)
 {
 	t_argv	*tmp;
 	int		x;
@@ -24,7 +24,7 @@ int	print_argv(t_argv *head, t_env *env)
 	{
 		i = 0;
 		if(!trim_expand(tmp, env))	//expander($ and *) and trim off outer qoutes
-				return (0);
+				return (free_argv(head), free_env(env), free(line), malloc_fail(env), 0); // malloc fail, msg written, exit (1)
 		while (i < tmp->argc)
 		{
 			printf(BLUE "t_argv[%d] type:%d", x, tmp->type);
@@ -52,14 +52,13 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_argv	*head;
-	t_env	*env;
+	t_env	env;
 	int		i;
 
 	(void)argc;
 	(void)argv;
-	env = init_env(envp);					//init t_env includes exit_status
-	if (!env)								//return NULL on fail, t_env is freed
-		return (0);
+	if (!init_env(&env, envp))
+		return (1);
 	signal(SIGQUIT, SIG_IGN);				// ctrl -/
 	signal(SIGINT, handle_sigint);			// ctrl -C
 	while (1)
@@ -69,19 +68,21 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (*line)
 			add_history(line);
-		i = build_argv(line, env, &head);	//init t_argv (do lexer then parser + syntax check)
-		if (i == -1)						//return (-1) when line is empty, line is freed
+		i = build_argv(line, &env, &head);	//init t_argv (do lexer then parser + syntax check)
+		if (i == -1)						//return (-1) when line is empty, or syntax error . line is freed. msg written, exit (1)
 			continue ;
 		if (i == 1)							//return (1) on success, t_token is freed
 		{
-			if (print_argv(head, env))		// expand and trim qoutes in "child"
-				env->exit_s = 0;
-			free_argv(head);
-		}								//return (0) if syntax error, t_token and t_argv are freed
-		free(line);
+			if (print_argv(head, &env, line))		// expand and trim qoutes in "child"
+			{
+				(&env)->exit_s = 0;
+				free_argv(head);
+				free(line);
+			}
+		}								//return (0) if syntax error, t_token and t_argv are freed. msg written, exit (1)
 	}
+	free_env(&env);
 	rl_clear_history();
-	free_env(env);
 	write(1, YELLOW"Exit Mini_Shell\n"RESET, 25);
 	return (0);
 }

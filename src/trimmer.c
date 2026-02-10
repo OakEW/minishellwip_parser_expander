@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:18 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 15:00:03 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 18:31:57 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@ int	rm_empty(t_argv *curt, int i)
 		free (curt->argv[0]);
 		curt->argv[0] = NULL;
 		curt->argc = 0;
-		return (1);
+		return (-1);
 	}
 	while (i < curt->argc - 1)
 	{
 		free (curt->argv[i]);
 		curt->argv[i] = ft_strdup(curt->argv[i + 1]);
 		if (!curt->argv[i])
-			return (-1);
+			return (0);
 		i++;
 	}
 	free (curt->argv[i]);
 	curt->argv[i] = NULL;
 	curt->argc--;
-	return (0);
+	return (1);
 }
 
 void	trim_q(char *s)
@@ -89,7 +89,7 @@ int	trim_expand(t_argv *curt, t_env *env)
 
 	i = 0;
 	if (!check_wildcard(curt, env))
-		return (0);
+		return (exit (1), 0);
 	if (!expand_home(curt, env))
 		return (0);
 	while (curt->argv[i])
@@ -102,11 +102,11 @@ int	trim_expand(t_argv *curt, t_env *env)
 			if (curt->argv[i][0] == 0)
 			{
 				flag = rm_empty(curt, i);
-				if (flag == -1)
-					return (malloc_fail(env), 0);
-				if (flag == 1)
-					break ;
 				if (flag == 0)
+					return (0);
+				if (flag == -1)
+					break ;
+				if (flag == 1)
 					continue ;
 			}
 			trim_q(curt->argv[i]);

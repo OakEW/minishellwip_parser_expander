@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:55:00 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 11:26:34 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,28 @@ void	int_init(int *i)
 	i[2] = 0;
 }
 
-int	rm_char(char **str, int pos)
+void	rm_char(char **str)
 {
-	int		i;
+	int		i[3];
+	int		pos;
 
-	i = pos;
-	while ((*str)[i])
+	int_init(i);
+	while ((*str)[i[0]])
 	{
-		(*str)[i] = (*str)[i + 1];
-		i++;
+		check_q((*str)[i[0]], &i[1], &i[2]);
+		if ((*str)[i[0]] == '$')
+		{
+			if ((i[1] == 0 && i[2] == 0) && (*str)[i[0] + 1] && ((*str)[i[0] + 1] == '\'' || (*str)[i[0] + 1] == '\"'))
+			{
+				pos = i[0];
+				while ((*str)[pos])
+				{
+					(*str)[pos] = (*str)[pos + 1];
+					pos++;
+				}
+				continue;
+			}
+		}
+		i[0]++;
 	}
-	return (1);
 }

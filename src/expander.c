@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:55:03 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 11:26:30 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,12 @@ int	expander(char **str, t_env *env)
 	char	*var;
 
 	int_init(i);
+	rm_char(str);
 	while ((*str)[i[0]])
 	{
 		if (check_q((*str)[i[0]], &i[1], &i[2]))
 		{
 			i[0]++;
-			if ((*str)[i[0]] == '\'' || (*str)[i[0]] == '\"')
-			{
-				if (!rm_char(str, i[0] - 1))
-					return (malloc_fail(env), 0);
-				i[0]++;
-				continue ;
-			}
 			if ((*str)[i[0]] == 0)
 				break ;
 			if ((*str)[i[0]] == '?')
@@ -132,7 +126,7 @@ int	expander(char **str, t_env *env)
 			else
 				var = find_var(&(*str)[i[0]], env);
 			if (!replace_var(str, var, i[0], env))
-				return (malloc_fail(env), 0);
+				return (0);
 			i[0] -= 2;
 		}
 		i[0]++;

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:02 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:50:37 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 17:40:24 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,51 +26,53 @@ int	o_p(t_token_type x)
 		return (0);
 }
 
-int	syntax_check(t_token *token)
+char	*syntax_check(t_token *token)
 {
 	t_token	*tmp;
 
 	tmp = token;
 	if (o_p(token->type) == 1)
-		return ('|');
+		return (tmp->value);
 	while (tmp)
 	{
 		if (tmp->next == NULL && o_p(tmp->type) > 0 && o_p(tmp->type) < 3)
-			return ((int)tmp->value[0]);
+			return ("newline");
 		if (o_p(tmp->type) == 1 && tmp->next && o_p(tmp->next->type) == 1)
-			return ('|');
+			return (tmp->next->value);
 		if (o_p(tmp->type) == 1 && tmp->next && o_p(tmp->next->type) == 4)
-			return (')');
+			return (tmp->next->value);
 		if (o_p(tmp->type) == 2 && tmp->next && o_p(tmp->next->type) > 0)
-			return ((int)tmp->next->value[0]);
+			return (tmp->next->value);
 		if (o_p(tmp->type) == 3 && tmp->next && o_p(tmp->next->type) == 1)
-			return ((int)tmp->next->value[0]);
+			return (tmp->next->value);
 		if (o_p(tmp->type) == 3 && tmp->next && o_p(tmp->next->type) == 4)
-			return ((int)tmp->next->value[0]);
+			return (tmp->next->value);
 		if (tmp->next && tmp->next->next && o_p(tmp->type) == 2
 			&& o_p(tmp->next->type) == 0 && o_p(tmp->next->next->type) >= 3)
-			return ((int)tmp->next->next->value[0]);
+			return (tmp->next->next->value);
 		tmp = tmp->next;
 	}
-	return (0);
+	return (NULL);
 }
 
 int	syntax_error(char *line, t_token *token, t_env *env)
 {
-	int	x;
+	char	*x;
 
+	x = syntax_check(token);
+	if (x != NULL)
+	{
+		env->exit_s = 2;
+		write (2, "syntax error near unexpected token `", 36);
+		write (2, x, ft_strlen(x));
+		write (2, "'\n", 2);
+		return (2);
+	}
 	if (precheck_line(line) != 0)
 	{
 		env->exit_s = 2;
-		printf (RED"syntax error near unexpected token `newline'\n"RESET);
+		write (2, "syntax error near unexpected token `newline'\n", 45);
 		return (1);
-	}
-	x = syntax_check(token);
-	if (x != 0)
-	{
-		env->exit_s = 2;
-		printf (RED"syntax error near unexpected token `%c'\n"RESET, (char)x);
-		return (2);
 	}
 	return (0);
 }

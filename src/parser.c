@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 14:46:49 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/09 18:17:09 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 	if (!token && env->exit_s == 42)
 		return (free_tokens(token), free (line), env->exit_s = 0, -1);
 	if (!token && env->exit_s != 42)
-		return (free_tokens(token), malloc_fail(env), 0);
-	if (syntax_error(line, token, env))
 		return (free_tokens(token), 0);
+	if (syntax_error(line, token, env))
+		return (free_tokens(token), -1);
 	head = make_argv(token);
 	if (!head)
-		return (free_tokens(token), malloc_fail(env), 0);
+		return (free_tokens(token), 0);
 	*out = head;
 	free_tokens(token);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/09 15:00:35 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/10 11:26:24 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_argv
 
 typedef struct s_env
 {
+	char	*last_dir;
 	char	**env;
 	int		cap;
 	int		size;
@@ -93,11 +94,11 @@ t_token	*lexer(char	*line, t_env *env);
 //init_env.c
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *s);
-t_env	*init_env(char **envp);
+int		init_env(t_env *env, char **envp);
 
 //syntax_check.c
 int		o_p(t_token_type x);
-int		syntax_check(t_token *token);
+char	*syntax_check(t_token *token);
 int		syntax_error(char *line, t_token *token, t_env *env);
 
 //parser_helper.c
@@ -128,7 +129,7 @@ char	*ft_itoa(int n);
 //expander_helper.c
 int		check_q(char c, int *q_s, int *q_d);
 void	int_init(int *i);
-int		rm_char(char **str, int pos);
+void	rm_char(char **str);
 
 //expander.c
 char	*find_var(char *str, t_env *env);

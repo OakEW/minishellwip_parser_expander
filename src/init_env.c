@@ -12,33 +12,30 @@
 
 #include "argv_env.h"
 
-t_env	*init_env(char **envp)
+int	init_env(t_env *env, char **envp)
 {
 	int		i;
-	t_env	*env;
 
 	i = 0;
-	env = malloc(sizeof(t_env));
-	if (!env)
-		return (NULL);
+	env->last_dir = NULL;
 	env->size = 0;
 	env->exit_s = 0;
 	while (envp[i++])
 		env->cap = i * 2;
 	env->env = malloc(sizeof(char *) * env->cap);
 	if (!env->env)
-		return (free_env(env), free(env), NULL);
+		return (free_env(env), 0);
 	i = 0;
 	while (envp[i])
 	{
 		env->env[i] = ft_strdup(envp[i]);
 		if (!env->env[i])
-			return (free_env(env), free(env), NULL);
+			return (free_env(env), 0);
 		i++;
 	}
 	env->env[i] = NULL;
 	env->size = i;
-	return (env);
+	return (1);
 }
 
 size_t	ft_strlen(const char *str)
