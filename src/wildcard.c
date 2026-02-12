@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 14:24:25 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 15:09:00 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	join_wild(t_argv *curt, int pos, t_entry *entry)
 
 	i = 0;
 	x = 0;
-	if (entry->match == 0)					// if no match, do nothing
+	if (entry->match == 0)
 		return (2);
 	new = malloc(sizeof(char *) * (curt->argc + entry->match));
 	if (!new)
@@ -116,12 +116,12 @@ int	check_wildcard(t_argv *curt, t_env *env)
 		j = 0;
 		while (curt->argv[i][j] && curt->argv[i][j] != '*')
 			j++;
-		if (curt->argv[i][j] == '*')				//find a string(curt->argv[i]) with * in it 
+		if (curt->argv[i][j] == '*')
 		{
-			if (!get_entry(env, &entry))			//get entry, sort entry
+			if (!get_entry(env, &entry))
 				return (0);
 			pattern_matching(curt->argv[i], &entry);
-			if (!join_wild(curt, i, &entry))		//do wildcard on this string(curt->argv[i])
+			if (!join_wild(curt, i, &entry))
 				return (free_entry(&entry), 0);
 			if (entry.match)
 				i = i + entry.match - 1;
