@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 14:16:47 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:24:25 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	match(char *pattern, char *str)
 	return (0);
 }
 
-int	pattern_matching(char *pat, t_entry *entry)
+int	pattern_matching(char *pattern, t_entry *entry)
 {
 	int	n;
 	int	ret;
@@ -89,7 +89,7 @@ int	pattern_matching(char *pat, t_entry *entry)
 	n = 0;
 	while (entry->entry[n])
 	{
-		ret = match(pat, entry->entry[n]);
+		ret = match(pattern, entry->entry[n]);
 		if (ret)
 			entry->match++;
 		else
@@ -123,9 +123,8 @@ int	check_wildcard(t_argv *curt, t_env *env)
 			pattern_matching(curt->argv[i], &entry);
 			if (!join_wild(curt, i, &entry))		//do wildcard on this string(curt->argv[i])
 				return (free_entry(&entry), 0);
-			if (entry.match == 0)
-				entry.match = 1;
-			i = i + entry.match - 1;
+			if (entry.match)
+				i = i + entry.match - 1;
 			free_entry(&entry);
 		}
 		i++;
