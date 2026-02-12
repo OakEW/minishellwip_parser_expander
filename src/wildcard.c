@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 14:00:37 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:16:47 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ int	pattern_matching(char *pat, t_entry *entry)
 	}
 	return (0);
 }
+
+//REMOVED A FUNCTION WILDCARDS
 
 int	check_wildcard(t_argv *curt, t_env *env)
 {
