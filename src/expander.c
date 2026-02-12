@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 15:39:17 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 13:09:49 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ int	expand_home(t_argv *curt, t_env *env)
 	home = find_var("HOME", env);
 	while (curt->argv[i])
 	{
-		if (curt->argv[i][0] == '~' && curt->argv[i][1]== 0)
+		if ((curt->argv[i][0] == '~' && curt->argv[i][1] == 0)
+			|| (curt->argv[i][0] == '~' && curt->argv[i][1] == '/'))
 		{
-			tmp = ft_strdup(home);
+			tmp = ft_strjoin(home, &curt->argv[i][1]);
 			if (!tmp)
 				return (0);
 			free (curt->argv[i]);

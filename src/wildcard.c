@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 13:01:38 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:00:37 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,51 +62,43 @@ int	join_wild(t_argv *curt, int pos, t_entry *entry)
 	return (1);
 }
 
-int	pattern_matching(char *pat, t_entry *entry) //matching pattern str (curt->argv[i]) with strstrs entry->entry
+int	match(char *pattern, char *str)
 {
-	entry->match = entry->cap - 1;
-	free (entry->entry[2]);
-	entry->entry[2] = NULL;
-	// int	n;
-	// int	m;
-	// int	j;
+	if (!*pattern && !*str)
+		return (1);
+	if (*pattern == '*')
+	{
+		while (*(pattern + 1) == '*')
+			pattern++;
+		if (match(pattern + 1, str))
+			return (1);
+		if (*str && match(pattern, str + 1))
+			return (1);
+		return (0);
+	}
+	if (*pattern == *str)
+		return (match(pattern + 1, str + 1));
+	return (0);
+}
 
-	// n = 0;
-	// j = 0;
-	// while (entry->entry[n])
-	// {
-	// 	m = 0;
-	// 	while (pat[j] && entry->entry[n][m])
-	// 	{
-	// 		while (pat[j] != '*' && pat[j] == entry->entry[n][m])
-	// 		{
-	// 			j++;
-	// 			m++;
-	// 		}
-	// 		if (pat[j] != '*')
-	// 			break ;
-	// 		while (pat[j])
-	// 			j++;
-	// 		while (entry->entry[n][m])
-	// 			m++;
-	// 		j--;
-	// 		m--;
-	// 		while (pat[j] != '*' && pat[j] == entry->entry[n][m])
-	// 		{
-	// 			j--;
-	// 			m--;
-	// 		}
-	// 	}
-	// 	if (pat[j] != '*')
-	// 	{
-	// 		free (entry->entry[n]);
-	// 		entry->entry[n] = NULL;
-	// 	}
-	// 	else
-	// 		entry->match++;
-	// 	j = 0;
-	// 	n++;
-	// }
+int	pattern_matching(char *pat, t_entry *entry)
+{
+	int	n;
+	int	ret;
+
+	n = 0;
+	while (entry->entry[n])
+	{
+		ret = match(pat, entry->entry[n]);
+		if (ret)
+			entry->match++;
+		else
+		{
+			free (entry->entry[n]);
+			entry->entry[n] = NULL;
+		}
+		n++;
+	}
 	return (0);
 }
 

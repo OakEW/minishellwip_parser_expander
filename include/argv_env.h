@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 12:56:16 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 13:10:13 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ void	free_entry(t_entry *entry);
 //sort_strs.c
 int		ft_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
 
