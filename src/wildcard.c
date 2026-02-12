@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 16:08:16 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:28:06 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ int	pattern_matching(char *pattern, t_entry *entry)
 	int	ret;
 
 	n = 0;
+	sort_entry(entry->entry);
 	while (entry->entry[n])
 	{
 		ret = match(pattern, entry->entry[n]);

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 14:18:15 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:37:00 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ void	free_argv(t_argv *head);
 void	free_entry(t_entry *entry);
 
 //sort_strs.c
-int		ft_strcmp(char *s1, char *s2);
+int		entry_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -192,22 +192,7 @@ ____________________
 
 int	expand_all(t_argv *curt, t_env *env)
 {
-	int	i;
-
-	i = 0;
-	if (curt->type > 2)
-		return (0);
-	if (!check_wildcard(curt, env))
-		return (1);
-	if (!expand_home(curt, env))
-		return (2);
-	rm_char(curt);
-	if (!expander(curt, env))
-		return (3);
-	if (!trim_empty(curt))
-		return (4);
-	trim_quote(curt);
-	return (0);
+	...
 }
 ...
 	if(expand_all(tmp, env))											//expander($ ~ *) and trim off outer qoutes

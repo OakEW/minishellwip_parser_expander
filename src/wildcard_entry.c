@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 11:10:26 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:41:10 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ int	entry_len(t_env *env)
 	return (i);
 }
 
-int	get_entry(t_env *env, t_entry *stash)
+int	init_entry(t_env *env, t_entry *stash)
 {
-	DIR				*cwd;
-	struct dirent	*entry;
-	int				i;
+	int	i;
 
 	i = entry_len(env);
 	if (i < 0)
@@ -47,9 +45,20 @@ int	get_entry(t_env *env, t_entry *stash)
 	stash->entry = malloc(sizeof(char *) * (i + 1));
 	if (!stash->entry)
 		return (0);
+	return (1);
+}
+
+int	get_entry(t_env *env, t_entry *stash)
+{
+	DIR				*cwd;
+	struct dirent	*entry;
+	int				i;
+
+	if (!init_entry(env, stash))
+		return (0);
 	cwd = opendir(".");
 	if (cwd == 0)
-		return (perror("opendir"), free_strstr(stash->entry), env->exit_s = errno, 0);
+		return (perror("opendir"), free_entry(stash), env->exit_s = errno, 0);
 	i = 0;
 	entry = readdir(cwd);
 	while (entry != NULL)
@@ -58,13 +67,12 @@ int	get_entry(t_env *env, t_entry *stash)
 		{
 			stash->entry[i] = ft_strdup(entry->d_name);
 			if (!stash->entry[i])
-				return (free_strstr(stash->entry), closedir(cwd), 0);
+				return (free_entry(stash), closedir(cwd), 0);
 			i++;
 		}
 		entry = readdir(cwd);
 	}
 	stash->entry[i] = NULL;
-	sort_entry(stash->entry);
 	closedir(cwd);
 	return (1);
 }

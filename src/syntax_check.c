@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:02 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 15:48:09 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:18:26 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,13 @@ char	*syntax_check(t_token *token)
 	{
 		if (tmp->next == NULL && o_p(tmp->type) > 0 && o_p(tmp->type) < 3)
 			return ("newline");
-		if (o_p(tmp->type) == 1 && tmp->next && o_p(tmp->next->type) == 1)
-			return (tmp->next->value);
-		if (o_p(tmp->type) == 1 && tmp->next && o_p(tmp->next->type) == 4)
-			return (tmp->next->value);
-		if (o_p(tmp->type) == 2 && tmp->next && o_p(tmp->next->type) > 0)
-			return (tmp->next->value);
-		if (o_p(tmp->type) == 3 && tmp->next && o_p(tmp->next->type) == 1)
-			return (tmp->next->value);
-		if (o_p(tmp->type) == 3 && tmp->next && o_p(tmp->next->type) == 4)
-			return (tmp->next->value);
-		if (o_p(tmp->type) == 4 && tmp->next && (o_p(tmp->next->type) == 3 || o_p(tmp->next->type) == 0))
+		if ((o_p(tmp->type) == 1 && tmp->next
+			&& (o_p(tmp->next->type) == 1 || o_p(tmp->next->type) == 4))
+			|| (o_p(tmp->type) == 2 && tmp->next && o_p(tmp->next->type) > 0)
+			|| (o_p(tmp->type) == 3 && tmp->next
+			&& (o_p(tmp->next->type) == 1 || o_p(tmp->next->type) == 4))
+			|| (o_p(tmp->type) == 4 && tmp->next && (o_p(tmp->next->type) == 3
+			|| o_p(tmp->next->type) == 0)))
 			return (tmp->next->value);
 		if (tmp->next && tmp->next->next && o_p(tmp->type) == 2
 			&& o_p(tmp->next->type) == 0 && o_p(tmp->next->next->type) >= 3)

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:57 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 14:25:30 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:37:47 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,3 +79,12 @@ int	build_argv(char *line, t_env *env, t_argv **out)
 	free(line);
 	return (1);
 }
+// build_argv
+//makes tokens
+// if !line "   " return (-1)				exit_s = 0
+//check syntax , return (-1) on error		exit_s = 2
+
+//make t_argv
+// on all malloc fail return (0)			exit (1)
+
+// in any case line and t_token are freed from here

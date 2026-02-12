@@ -6,13 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 13:07:26 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 16:30:21 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-int	ft_strcmp(char *s1, char *s2)
+int	entry_strcmp(char *s1, char *s2)
 {
 	int		i;
 	char	x;
@@ -52,7 +52,7 @@ void	sort_entry(char **entry)
 		j = i + 1;
 		while (entry[i] && entry[j])
 		{
-			if (ft_strcmp(entry[i], entry [j]) > 0)
+			if (entry_strcmp(entry[i], entry [j]) > 0)
 			{
 				tmp = entry[i];
 				entry[i] = entry[j];
