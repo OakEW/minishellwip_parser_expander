@@ -6,28 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 14:20:20 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 13:01:38 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-char	**join_wild_helper(t_argv *curt, char **entry)
-{
-	char	**new;
-	int		len;
-
-	len = 0;
-	while (entry[len])
-		len++;
-	new = malloc(sizeof(char *) * (curt->argc + len));
-	if (!new)
-		return (NULL);
-	curt->argc = curt->argc + len - 1;
-	return (new);
-}
-
-int	join_wild(t_argv *curt, int pos, char **entry)
+int	join_wild(t_argv *curt, int pos, t_entry *entry)
 {
 	char	**new;
 	int		x;
@@ -36,8 +21,9 @@ int	join_wild(t_argv *curt, int pos, char **entry)
 
 	i = 0;
 	x = 0;
-	j = 0;
-	new = join_wild_helper(curt, entry);
+	if (entry->match == 0)					// if no match, do nothing
+		return (2);
+	new = malloc(sizeof(char *) * (curt->argc + entry->match));
 	if (!new)
 		return (0);
 	while (i < pos)
@@ -49,12 +35,16 @@ int	join_wild(t_argv *curt, int pos, char **entry)
 		i++;
 	}
 	x++;
-	while (entry[j])
+	j = 0;
+	while (j < entry->cap)
 	{
-		new[i] = ft_strdup(entry[j]);
-		if (!new[i])
-			return (free_strstr(new), 0);
-		i++;
+		if (entry->entry[j] != NULL)
+		{
+			new[i] = ft_strdup(entry->entry[j]);
+			if (!new[i])
+				return (free_strstr(new), 0);
+			i++;
+		}
 		j++;
 	}
 	while (curt->argv[x])
@@ -68,47 +58,81 @@ int	join_wild(t_argv *curt, int pos, char **entry)
 	new[i] = 0;
 	free_strstr(curt->argv);
 	curt->argv = new;
+	curt->argc = curt->argc + entry->match - 1;
 	return (1);
 }
 
-int	wildcards(t_argv *curt, t_env *env)
+int	pattern_matching(char *pat, t_entry *entry) //matching pattern str (curt->argv[i]) with strstrs entry->entry
 {
-	int		i;
-	int		len;
-	char	**entry;
+	entry->match = entry->cap - 1;
+	free (entry->entry[2]);
+	entry->entry[2] = NULL;
+	// int	n;
+	// int	m;
+	// int	j;
 
-	i = 0;
-	len = 0;
-	entry = get_entry(env);
-	if (!entry)
-		return (0);
-	sort_entry(entry);
-	while (curt->argv[i])
-	{
-		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
-		{		
-			if (!join_wild(curt, i, entry))
-				return (free_strstr(entry), 0);
-			i = 0;
-		}
-		i++;
-	}
-	if (entry)
-		free_strstr(entry);
-	return (1);
+	// n = 0;
+	// j = 0;
+	// while (entry->entry[n])
+	// {
+	// 	m = 0;
+	// 	while (pat[j] && entry->entry[n][m])
+	// 	{
+	// 		while (pat[j] != '*' && pat[j] == entry->entry[n][m])
+	// 		{
+	// 			j++;
+	// 			m++;
+	// 		}
+	// 		if (pat[j] != '*')
+	// 			break ;
+	// 		while (pat[j])
+	// 			j++;
+	// 		while (entry->entry[n][m])
+	// 			m++;
+	// 		j--;
+	// 		m--;
+	// 		while (pat[j] != '*' && pat[j] == entry->entry[n][m])
+	// 		{
+	// 			j--;
+	// 			m--;
+	// 		}
+	// 	}
+	// 	if (pat[j] != '*')
+	// 	{
+	// 		free (entry->entry[n]);
+	// 		entry->entry[n] = NULL;
+	// 	}
+	// 	else
+	// 		entry->match++;
+	// 	j = 0;
+	// 	n++;
+	// }
+	return (0);
 }
 
 int	check_wildcard(t_argv *curt, t_env *env)
 {
-	int	i;
+	int		i;
+	int		j;
+	t_entry entry;
 
 	i = 0;
 	while (curt->argv[i])
 	{
-		if (curt->argv[i][0] == '*' && curt->argv[i][1] == 0)
+		j = 0;
+		while (curt->argv[i][j] && curt->argv[i][j] != '*')
+			j++;
+		if (curt->argv[i][j] == '*')				//find a string(curt->argv[i]) with * in it 
 		{
-			if (!wildcards(curt, env))
+			if (!get_entry(env, &entry))			//get entry, sort entry
 				return (0);
+			pattern_matching(curt->argv[i], &entry);
+			if (!join_wild(curt, i, &entry))		//do wildcard on this string(curt->argv[i])
+				return (free_entry(&entry), 0);
+			if (entry.match == 0)
+				entry.match = 1;
+			i = i + entry.match - 1;
+			free_entry(&entry);
 		}
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 12:30:26 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 11:10:26 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,36 +33,38 @@ int	entry_len(t_env *env)
 	return (i);
 }
 
-char	**get_entry(t_env *env)
+int	get_entry(t_env *env, t_entry *stash)
 {
 	DIR				*cwd;
 	struct dirent	*entry;
-	char			**stash;
 	int				i;
 
 	i = entry_len(env);
 	if (i < 0)
-		return (NULL);
-	stash = malloc(sizeof(char *) * (i + 1));
-	if (!stash)
-		return (NULL);
+		return (0);
+	stash->cap = i;
+	stash->match = 0;
+	stash->entry = malloc(sizeof(char *) * (i + 1));
+	if (!stash->entry)
+		return (0);
 	cwd = opendir(".");
-	if (cwd == NULL)
-		return (perror("opendir"), free_strstr(stash), env->exit_s = errno, NULL);
+	if (cwd == 0)
+		return (perror("opendir"), free_strstr(stash->entry), env->exit_s = errno, 0);
 	i = 0;
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
 		if (entry->d_name[0] != '.')
 		{
-			stash[i] = ft_strdup(entry->d_name);
-			if (!stash[i])
-				return (free_strstr(stash), closedir(cwd), NULL);
+			stash->entry[i] = ft_strdup(entry->d_name);
+			if (!stash->entry[i])
+				return (free_strstr(stash->entry), closedir(cwd), 0);
 			i++;
 		}
 		entry = readdir(cwd);
 	}
-	stash[i] = NULL;
+	stash->entry[i] = NULL;
+	sort_entry(stash->entry);
 	closedir(cwd);
-	return (stash);
+	return (1);
 }

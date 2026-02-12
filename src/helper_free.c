@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 15:58:41 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 12:56:21 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,18 @@ void	free_argv(t_argv *head)
 		}
 		free(tmp);
 	}
+}
+
+void	free_entry(t_entry *entry)
+{
+	int	i;
+
+	i = 0;
+	while (i < entry->cap)
+	{
+		if (entry->entry[i])
+			free (entry->entry[i]);
+		i++;
+	}
+	free(entry->entry);
 }

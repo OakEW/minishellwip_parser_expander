@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 17:14:21 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 12:56:16 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,13 @@ typedef struct s_env
 	int		exit_s;
 }	t_env;
 
+typedef struct s_entry
+{
+	char	**entry;
+	int		cap;
+	int		match;
+}	t_entry;
+
 //init_env.c
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *s);
@@ -115,12 +122,12 @@ int		build_argv(char *line, t_env *env, t_argv **out);		//lexer->snytax->parser,
 
 //wildcard_entry.c
 int		entry_len(t_env *env);
-char	**get_entry(t_env *env);
+int		get_entry(t_env *env, t_entry *entry);
 
 //wildcard.c
-char	**join_wild_helper(t_argv *curt, char **entry);
-int		join_wild(t_argv *curt, int pos, char **entry);
-int		wildcards(t_argv *curt, t_env *env);
+int		join_wild(t_argv *curt, int pos, t_entry *entry);
+int		pattern_matching(char *pattern, t_entry *entry);
+int		wildcards(t_argv *curt, t_entry *entry, int i);
 int		check_wildcard(t_argv *curt, t_env *env);				//expand wildcard *
 
 //expander_helper_var.c
@@ -159,7 +166,7 @@ void	free_strstr(char **s);
 void	free_env(t_env *env);
 void	free_tokens(t_token *head);
 void	free_argv(t_argv *head);
-void	malloc_fail(t_env *env);
+void	free_entry(t_entry *entry);
 
 //sort_strs.c
 int		ft_strcmp(char *s1, char *s2);
