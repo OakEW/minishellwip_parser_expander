@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 15:09:00 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 15:47:02 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,16 +107,20 @@ int	pattern_matching(char *pattern, t_entry *entry)
 int	check_wildcard(t_argv *curt, t_env *env)
 {
 	int		i;
-	int		j;
+	int		j[3];
 	t_entry entry;
 
 	i = 0;
+	int_init(j);
 	while (curt->argv[i])
 	{
-		j = 0;
-		while (curt->argv[i][j] && curt->argv[i][j] != '*')
-			j++;
-		if (curt->argv[i][j] == '*')
+		j[0] = 0;
+		while (curt->argv[i][j[0]] && curt->argv[i][j[0]] != '*')
+		{
+			check_q(curt->argv[i][j[0]], &j[1], &j[2]);
+			j[0]++;
+		}
+		if (curt->argv[i][j[0]] == '*' && !j[1] && !j[2])
 		{
 			if (!get_entry(env, &entry))
 				return (0);

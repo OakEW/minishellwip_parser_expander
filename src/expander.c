@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 13:09:49 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/12 15:30:39 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,14 @@ int	expand_all(t_argv *curt, t_env *env)
 	i = 0;
 	if (curt->type > 2)
 		return (0);
-	if (!check_wildcard(curt, env))
+	if (!check_wildcard(curt, env))		//expand wildcard *
 		return (1);
 	if (!expand_home(curt, env))
 		return (2);
-	rm_char(curt);
-	if (!expander(curt, env))
+	rm_char(curt);						//remove $ when $" || $'
+	if (!expander(curt, env))			//expand $ENV
 		return (3);
-	if (!trim_empty(curt))
+	if (!trim_empty(curt))				//trim off empty strstr from t_argv->argv after expand $ENV. 
 		return (4);
 	trim_quote(curt);
 	return (0);
