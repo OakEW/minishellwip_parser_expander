@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 16:07:19 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:00:35 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	rm_char_helper(char **str)
 		check_q((*str)[i[0]], &i[1], &i[2]);
 		if ((*str)[i[0]] == '$')
 		{
-			if (!i[1] && !i[2] && (*str)[i[0] + 1] && ((*str)[i[0] + 1] == '\'' || (*str)[i[0] + 1] == '\"'))
+			if (!i[1] && !i[2] && (*str)[i[0] + 1]
+				&& ((*str)[i[0] + 1] == '\'' || (*str)[i[0] + 1] == '\"'))
 			{
 				pos = i[0];
 				while ((*str)[pos])
@@ -50,7 +51,7 @@ void	rm_char_helper(char **str)
 					(*str)[pos] = (*str)[pos + 1];
 					pos++;
 				}
-				continue;
+				continue ;
 			}
 		}
 		i[0]++;

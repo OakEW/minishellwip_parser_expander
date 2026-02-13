@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:32:25 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/10 15:45:27 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:00:10 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token	*make_token(char *str, t_token_type type)
 	}
 	token->next = NULL;
 	return (token);
-}		
+}
 
 int	link_token(t_token **head, t_token **current, t_token_type type, char *str)
 {

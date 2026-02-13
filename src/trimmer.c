@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:33:18 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 15:45:59 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:00:47 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	trim_quote(t_argv *curt)
 int	rm_empty(t_argv *curt, int i)
 {
 	char	*tmp;
-	
+
 	if (curt->argc == 1)
 	{
 		free (curt->argv[0]);

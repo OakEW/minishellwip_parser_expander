@@ -6,11 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 14:14:34 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:09:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
+
+// int	joint_wild_helper()
 
 int	join_wild(t_argv *curt, int pos, t_entry *entry)
 {
@@ -103,13 +105,11 @@ int	pattern_matching(char *pattern, t_entry *entry)
 	return (0);
 }
 
-//REMOVED A FUNCTION WILDCARDS
-
 int	wildcards(t_argv *curt, t_env *env)
 {
 	int		i;
 	int		j[3];
-	t_entry entry;
+	t_entry	entry;
 
 	i = 0;
 	int_init(j);
