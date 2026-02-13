@@ -6,13 +6,13 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 16:09:14 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 17:34:53 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-// int	joint_wild_helper()
+// int	joint_wild_helper(t_argv *curt, int pos, t_entry *entry, int *i)
 
 int	join_wild(t_argv *curt, int pos, t_entry *entry)
 {
@@ -62,47 +62,6 @@ int	join_wild(t_argv *curt, int pos, t_entry *entry)
 	curt->argv = new;
 	curt->argc = curt->argc + entry->match - 1;
 	return (1);
-}
-
-int	match(char *pattern, char *str)
-{
-	if (!*pattern && !*str)
-		return (1);
-	if (*pattern == '*')
-	{
-		while (*(pattern + 1) == '*')
-			pattern++;
-		if (match(pattern + 1, str))
-			return (1);
-		if (*str && match(pattern, str + 1))
-			return (1);
-		return (0);
-	}
-	if (*pattern == *str)
-		return (match(pattern + 1, str + 1));
-	return (0);
-}
-
-int	pattern_matching(char *pattern, t_entry *entry)
-{
-	int	n;
-	int	ret;
-
-	n = 0;
-	sort_entry(entry->entry);
-	while (entry->entry[n])
-	{
-		ret = match(pattern, entry->entry[n]);
-		if (ret)
-			entry->match++;
-		else
-		{
-			free (entry->entry[n]);
-			entry->entry[n] = NULL;
-		}
-		n++;
-	}
-	return (0);
 }
 
 int	wildcards(t_argv *curt, t_env *env)

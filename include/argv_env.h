@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 15:52:36 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 17:36:42 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,13 @@ int		build_argv(char *line, t_env *env, t_argv **out);
 
 //wildcard_entry.c
 int		entry_len(t_env *env);
+int		init_entry(t_env *env, t_entry *stash);
 int		get_entry(t_env *env, t_entry *entry);
+int		match(char *pattern, char *str);
+int		pattern_matching(char *pattern, t_entry *entry);
 
 //wildcard.c
 int		join_wild(t_argv *curt, int pos, t_entry *entry);
-int		match(char *pattern, char *str);
-int		pattern_matching(char *pattern, t_entry *entry);
 int		wildcards(t_argv *curt, t_env *env);
 
 //expander_helper_var.c
