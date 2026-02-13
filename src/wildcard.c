@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 16:28:06 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 14:14:34 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	pattern_matching(char *pattern, t_entry *entry)
 
 //REMOVED A FUNCTION WILDCARDS
 
-int	check_wildcard(t_argv *curt, t_env *env)
+int	wildcards(t_argv *curt, t_env *env)
 {
 	int		i;
 	int		j[3];

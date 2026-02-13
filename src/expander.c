@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 16:32:11 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 14:15:07 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,9 @@ int	expander(t_argv *curt, t_env *env)
 
 int	expand_all(t_argv *curt, t_env *env)
 {
-	int	i;
-
-	i = 0;
 	if (curt->type > 2)
 		return (0);
-	if (!check_wildcard(curt, env))		//expand wildcard *
+	if (!wildcards(curt, env))		//expand wildcard *
 		return (1);
 	if (!expand_home(curt, env))		//expand ~
 		return (2);

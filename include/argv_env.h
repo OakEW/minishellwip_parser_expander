@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/12 16:37:00 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/13 14:14:11 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int		get_entry(t_env *env, t_entry *entry);
 int		join_wild(t_argv *curt, int pos, t_entry *entry);
 int		match(char *pattern, char *str);
 int		pattern_matching(char *pattern, t_entry *entry);		//REMOVED A FUNCTION WILDCARDS
-int		check_wildcard(t_argv *curt, t_env *env);				//expand wildcard *
+int		wildcards(t_argv *curt, t_env *env);				//expand wildcard *
 
 //expander_helper_var.c
 char	*find_var(char *str, t_env *env);
@@ -140,7 +140,7 @@ int		replace_var(char **str, char *add, int i, t_env *env);
 int		expand_home(t_argv *curt, t_env *env);					//expand ~ to HOME
 int		expander_helper(char **str, t_env *env);
 int		expander(t_argv *curt, t_env *env);						//expand $ENV
-int		expand_all(t_argv *curt, t_env *env);		//do check_wildcard -> expand_home -> rm_char -> expander -> trim_empty -> trim_quote; 
+int		expand_all(t_argv *curt, t_env *env);		//do wildcards -> expand_home -> rm_char -> expander -> trim_empty -> trim_quote; 
 													//return (>0) on malloc fails. return (0) on success
 
 //rm_char.c
