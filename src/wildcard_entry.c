@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/17 16:16:06 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/17 17:07:30 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	entry_len(t_env *env)
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
-		if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
-			|| (entry->d_name[0] == '.' && !entry->d_name[1])))
+		// if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
+		// 	|| (entry->d_name[0] == '.' && !entry->d_name[1])))
 			i++;
 		entry = readdir(cwd);
 	}
@@ -64,14 +64,14 @@ int	get_entry(t_env *env, t_entry *stash)
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
-		if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
-			|| (entry->d_name[0] == '.' && !entry->d_name[1])))
-		{
+		// if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
+		// 	|| (entry->d_name[0] == '.' && !entry->d_name[1])))
+		// {
 			stash->entry[i] = ft_strdup(entry->d_name);
 			if (!stash->entry[i])
 				return (free_entry(stash), closedir(cwd), 0);
 			i++;
-		}
+		// }
 		entry = readdir(cwd);
 	}
 	stash->entry[i] = NULL;
@@ -80,8 +80,6 @@ int	get_entry(t_env *env, t_entry *stash)
 
 int	match(char *pattern, char *str)
 {
-	if (pattern[0] != '.' && str[0] == '.')
-		return (0);
 	if (*pattern == '\'' || *pattern == '\"')
 		pattern++;
 	if (!*pattern && !*str)
@@ -104,19 +102,25 @@ int	match(char *pattern, char *str)
 int	pattern_matching(char *pattern, t_entry *entry)
 {
 	int	n;
-	int	ret;
 
 	n = 0;
 	sort_entry(entry->entry);
 	while (entry->entry[n])
 	{
-		ret = match(pattern, entry->entry[n]);
-		if (ret)
-			entry->match++;
-		else
+		if (pattern[0] != '.' && entry->entry[n][0] == '.') //tmp fix bug "."*
 		{
 			free (entry->entry[n]);
 			entry->entry[n] = NULL;
+		}
+		else
+		{
+			if (match(pattern, entry->entry[n]))
+				entry->match++;
+			else
+			{
+				free (entry->entry[n]);
+				entry->entry[n] = NULL;
+			}
 		}
 		n++;
 	}
