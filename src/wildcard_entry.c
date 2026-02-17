@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 17:34:39 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/17 16:03:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	get_entry(t_env *env, t_entry *stash)
 
 int	match(char *pattern, char *str)
 {
+	if (*pattern == '\'' || *pattern == '\"')
+		pattern++;
 	if (!*pattern && !*str)
 		return (1);
 	if (*pattern == '*')
