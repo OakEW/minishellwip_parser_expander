@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:34 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/06 15:34:16 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 15:02:14 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	init_env(t_env *env, char **envp)
 	env->exit_s = 0;
 	while (envp[i++])
 		env->cap = i * 2;
+	if (!i)
+		env->cap = 8;
 	env->env = malloc(sizeof(char *) * env->cap);
 	if (!env->env)
 		return (free_env(env), 0);

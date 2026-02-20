@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/20 14:08:27 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 16:02:53 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,10 @@ int	wild_catcher(char *str, t_wild *wild)
 
 	int_init(i, 4);
 	wild->str = ft_strdup(str);
+	if (!wild->str)
+		return (-1);
 	wild->flag = ft_strdup(str);
-	if (!wild->str || !wild->flag)
+	if (!wild->flag)
 		return (-1);
 	return (init_wild(wild, i));
 }
@@ -89,7 +91,7 @@ int	wildcards(t_argv *curt, t_env *env)
 	i = 0;
 	while (curt->argv[i])
 	{
-		if (wild_catcher(curt->argv[i], &wild))
+		if (wild_catcher(curt->argv[i], &wild) > 0)
 		{
 			if (!get_entry(env, &entry))
 				return (0);
@@ -99,9 +101,11 @@ int	wildcards(t_argv *curt, t_env *env)
 			if (entry.match)
 				i = i + entry.match - 1;
 			free_entry(&entry);
-			free(wild.str);
-			free(wild.flag);
 		}
+		if (wild.str)
+			free(wild.str);
+		if (wild.flag)
+			free(wild.flag);
 		i++;
 	}
 	return (1);
