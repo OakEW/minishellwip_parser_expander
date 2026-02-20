@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/20 13:54:38 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 14:08:27 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,10 @@ int	wildcards(t_argv *curt, t_env *env)
 			if (entry.match)
 				i = i + entry.match - 1;
 			free_entry(&entry);
+			free(wild.str);
+			free(wild.flag);
 		}
 		i++;
 	}
-	return (free(wild.str), free(wild.flag), 1);
+	return (1);
 }
