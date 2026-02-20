@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 15:54:41 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 13:54:20 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,25 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(&join[ft_strlen(s1)], s2, ft_strlen(s2));
 	join[ft_strlen(s1) + ft_strlen(s2)] = 0;
 	return (join);
+}
+
+int	mutistrdup(char **dest, char **sorc, int n, int i)
+{
+	int	j;
+
+	j = 0;
+	if (!dest || !sorc)
+		return (0);
+	while (j < n)
+	{
+		if (sorc[j])
+		{
+			dest[i] = ft_strdup(sorc[j]);
+			if (!dest[i])
+				return (-1);
+			i++;
+		}
+		j++;
+	}
+	return (i);
 }

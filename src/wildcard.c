@@ -6,82 +6,94 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 17:34:53 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 13:54:38 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
-// int	joint_wild_helper(t_argv *curt, int pos, t_entry *entry, int *i)
-
 int	join_wild(t_argv *curt, int pos, t_entry *entry)
 {
 	char	**new;
-	int		x;
 	int		i;
-	int		j;
 
 	i = 0;
-	x = 0;
 	if (entry->match == 0)
 		return (2);
 	new = malloc(sizeof(char *) * (curt->argc + entry->match));
 	if (!new)
 		return (0);
-	while (i < pos)
-	{
-		new[i] = ft_strdup(curt->argv[x]);
-		if (!new[i])
-			return (free_strstr(new), 0);
-		x++;
-		i++;
-	}
-	x++;
-	j = 0;
-	while (j < entry->cap)
-	{
-		if (entry->entry[j] != NULL)
-		{
-			new[i] = ft_strdup(entry->entry[j]);
-			if (!new[i])
-				return (free_strstr(new), 0);
-			i++;
-		}
-		j++;
-	}
-	while (curt->argv[x])
-	{
-		new[i] = ft_strdup(curt->argv[x]);
-		if (!new[i])
-			return (free_strstr(new), 0);
-		i++;
-		x++;
-	}
+	i = mutistrdup(new, curt->argv, pos, 0);
+	if (i < 0)
+		return (free_strstr(new), 0);
+	i = mutistrdup(new, entry->entry, entry->cap, i);
+	if (i < 0)
+		return (free_strstr(new), 0);
+	i = mutistrdup(new, &(curt->argv[pos + 1]), curt->argc - pos - 1, i);
+	if (i < 0)
+		return (free_strstr(new), 0);
 	new[i] = 0;
 	free_strstr(curt->argv);
 	curt->argv = new;
-	curt->argc = curt->argc + entry->match - 1;
+	curt->argc = i;
 	return (1);
+}
+
+int	init_wild(t_wild *wild, int *i)
+{
+	int	n;
+
+	n = 0;
+	while (wild->str[i[0]])
+	{
+		if (wild->str[i[0]] == '\'' && !i[2])
+			i[1] = !i[1];
+		else if (wild->str[i[0]] == '\"' && !i[1])
+			i[2] = !i[2];
+		else
+		{
+			wild->str[n] = wild->str[i[0]];
+			wild->flag[n] = 'n';
+			if (wild->str[n] == '*' && !i[1] && !i[2])
+			{
+				wild->flag[n] = 'w';
+				i[4] = 1;
+			}
+			n++;
+		}
+		(i[0])++;
+	}
+	wild->str[n] = 0;
+	wild->flag[n] = 'n';
+	return (i[4]);
+}
+
+int	wild_catcher(char *str, t_wild *wild)
+{
+	int	i[4];
+
+	int_init(i, 4);
+	wild->str = ft_strdup(str);
+	wild->flag = ft_strdup(str);
+	if (!wild->str || !wild->flag)
+		return (-1);
+	return (init_wild(wild, i));
 }
 
 int	wildcards(t_argv *curt, t_env *env)
 {
 	int		i;
-	int		j[3];
 	t_entry	entry;
+	t_wild	wild;
 
 	i = 0;
-	int_init(j);
 	while (curt->argv[i])
 	{
-		j[0] = 0;
-		while (curt->argv[i][j[0]] && curt->argv[i][j[0]] != '*')
-			check_q(curt->argv[i][j[0]++], &j[1], &j[2]);
-		if (curt->argv[i][j[0]] == '*' && !j[1] && !j[2])
+		if (wild_catcher(curt->argv[i], &wild))
 		{
 			if (!get_entry(env, &entry))
 				return (0);
-			pattern_matching(curt->argv[i], &entry);
+			pattern_matching(&wild, &entry);
 			if (!join_wild(curt, i, &entry))
 				return (free_entry(&entry), 0);
 			if (entry.match)
@@ -90,5 +102,5 @@ int	wildcards(t_argv *curt, t_env *env)
 		}
 		i++;
 	}
-	return (1);
+	return (free(wild.str), free(wild.flag), 1);
 }

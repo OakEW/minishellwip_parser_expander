@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 11:34:26 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 17:36:42 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 13:53:43 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,12 @@ typedef struct s_entry
 	int		match;
 }	t_entry;
 
+typedef struct s_wild
+{
+	char	*str;
+	char	*flag;
+}	t_wild;
+
 //init_env.c
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *s);
@@ -122,11 +128,15 @@ int		build_argv(char *line, t_env *env, t_argv **out);
 int		entry_len(t_env *env);
 int		init_entry(t_env *env, t_entry *stash);
 int		get_entry(t_env *env, t_entry *entry);
-int		match(char *pattern, char *str);
-int		pattern_matching(char *pattern, t_entry *entry);
+
+//wildcard_match.c
+int		match(char *pattern, char *flag, char *str);
+int		pattern_matching(t_wild *wild, t_entry *entry);
 
 //wildcard.c
 int		join_wild(t_argv *curt, int pos, t_entry *entry);
+int		init_wild(t_wild *wild, int *i);
+int		wild_catcher(char *str, t_wild *wild);
 int		wildcards(t_argv *curt, t_env *env);
 
 //expander_helper_var.c
@@ -143,7 +153,7 @@ int		expand_all(t_argv *curt, t_env *env);
 
 //rm_char.c
 int		check_q(char c, int *q_s, int *q_d);
-void	int_init(int *i);
+void	int_init(int *i, int n);
 void	rm_char_helper(char **str);
 void	rm_char(t_argv *curt);
 
@@ -170,5 +180,6 @@ int		entry_strcmp(char *s1, char *s2);
 void	sort_entry(char **entry);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
+int		mutistrdup(char **dest, char **sorc, int n, int i);
 
 #endif

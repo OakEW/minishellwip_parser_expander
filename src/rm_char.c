@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/13 16:00:35 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 12:59:15 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@ int	check_q(char c, int *q_s, int *q_d)
 		return (0);
 }
 
-void	int_init(int *i)
+void	int_init(int *i, int n)
 {
-	i[0] = 0;
-	i[1] = 0;
-	i[2] = 0;
+	int	x;
+
+	x = 0;
+	while (x < n)
+	{
+		i[x] = 0;
+		x++;
+	}
 }
 
 void	rm_char_helper(char **str)
@@ -36,7 +41,7 @@ void	rm_char_helper(char **str)
 	int		i[3];
 	int		pos;
 
-	int_init(i);
+	int_init(i, 3);
 	while ((*str)[i[0]])
 	{
 		check_q((*str)[i[0]], &i[1], &i[2]);

@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 13:53:44 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/17 17:07:30 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 12:00:12 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ int	entry_len(t_env *env)
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
-		// if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
-		// 	|| (entry->d_name[0] == '.' && !entry->d_name[1])))
-			i++;
+		i++;
 		entry = readdir(cwd);
 	}
 	closedir(cwd);
@@ -64,65 +62,13 @@ int	get_entry(t_env *env, t_entry *stash)
 	entry = readdir(cwd);
 	while (entry != NULL)
 	{
-		// if (!((entry->d_name[0] == '.' && entry->d_name[1] == '.')
-		// 	|| (entry->d_name[0] == '.' && !entry->d_name[1])))
-		// {
-			stash->entry[i] = ft_strdup(entry->d_name);
-			if (!stash->entry[i])
-				return (free_entry(stash), closedir(cwd), 0);
-			i++;
-		// }
+		stash->entry[i] = ft_strdup(entry->d_name);
+		if (!stash->entry[i])
+			return (free_entry(stash), closedir(cwd), 0);
+		i++;
 		entry = readdir(cwd);
 	}
 	stash->entry[i] = NULL;
+	sort_entry(stash->entry);
 	return (closedir(cwd), 1);
-}
-
-int	match(char *pattern, char *str)
-{
-	if (*pattern == '\'' || *pattern == '\"')
-		pattern++;
-	if (!*pattern && !*str)
-		return (1);
-	if (*pattern == '*')
-	{
-		while (*(pattern + 1) == '*')
-			pattern++;
-		if (match(pattern + 1, str))
-			return (1);
-		if (*str && match(pattern, str + 1))
-			return (1);
-		return (0);
-	}
-	if (*pattern == *str)
-		return (match(pattern + 1, str + 1));
-	return (0);
-}
-
-int	pattern_matching(char *pattern, t_entry *entry)
-{
-	int	n;
-
-	n = 0;
-	sort_entry(entry->entry);
-	while (entry->entry[n])
-	{
-		if (pattern[0] != '.' && entry->entry[n][0] == '.') //tmp fix bug "."*
-		{
-			free (entry->entry[n]);
-			entry->entry[n] = NULL;
-		}
-		else
-		{
-			if (match(pattern, entry->entry[n]))
-				entry->match++;
-			else
-			{
-				free (entry->entry[n]);
-				entry->entry[n] = NULL;
-			}
-		}
-		n++;
-	}
-	return (0);
 }

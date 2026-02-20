@@ -4,8 +4,9 @@ SRC_DIR= src/
 OBJ_DIR= obj/
 INC= include/
 
-SRC= tester_ed.c lexer.c lexer_helper.c wildcard.c wildcard_entry.c init_env.c parser.c \
-	 parser_helper.c syntax_check.c expander.c rm_char.c expander_helper_var.c \
+SRC= tester_ed.c lexer.c lexer_helper.c wildcard.c wildcard_entry.c \
+	 wildcard_match.c init_env.c parser.c parser_helper.c syntax_check.c \
+	 expander.c rm_char.c expander_helper_var.c \
 	 trimmer.c helper_itoa.c helper_free.c sort_strs.c
 
 OBJ= ${addprefix ${OBJ_DIR}, ${SRC:.c=.o}}

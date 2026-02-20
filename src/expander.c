@@ -6,7 +6,7 @@
 /*   By: ywang2 <ywang2@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 15:32:16 by ywang2            #+#    #+#             */
-/*   Updated: 2026/02/17 14:11:30 by ywang2           ###   ########.fr       */
+/*   Updated: 2026/02/20 12:21:31 by ywang2           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	expander_helper(char **str, t_env *env)
 	int		i[3];
 	char	*var;
 
-	int_init(i);
+	int_init(i, 3);
 	while ((*str)[i[0]])
 	{
 		if (check_q((*str)[i[0]], &i[1], &i[2]))
